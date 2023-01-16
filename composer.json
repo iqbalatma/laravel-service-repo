@@ -15,6 +15,7 @@
 	],
 	"require": {
 		"php": ">=8.0",
-		"monolog/monolog": "^2.8"
+		"monolog/monolog": "^2.8",
+		"illuminate/support": "^9.47"
 	}
 }
