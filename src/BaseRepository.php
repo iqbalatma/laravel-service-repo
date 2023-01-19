@@ -3,26 +3,26 @@
 namespace Iqbalatma\LaravelExtend;
 
 use Iqbalatma\LaravelExtend\Interfaces\IRepository;
+use Iqbalatma\LaravelExtend\Traits\RepositoryFilter;
 
 abstract class BaseRepository implements IRepository
 {
+    use RepositoryFilter;
     protected const DEFAULT_PER_PAGE = 5;
-    protected  $model;
+    protected $model;
 
-    public function searchColumn(array $searchableColumn = []): object
+    /**
+     * use with for relations
+     * @param array $with
+     * @return BaseRepository
+     */
+    public function with(array $with)
     {
-        $queryParams = request()->query()["search"];
-        ["columns" => $columns, "values" => $values, "operators" => $operators] = $queryParams;
-
-        for ($i = 0; $i < count($columns); $i++) {
-            if (isset($columns[$i]) && isset($values[$i]) && isset($searchableColumn[$columns[$i]])) {
-                $this->model = $this->model->where($searchableColumn[$columns[$i]], $operators[$i] ?? "=", $values[$i]);
-            }
-        }
-
+        $this->model->with($with);
 
         return $this;
     }
+
 
     /**
      * Use to get all data with pagination
