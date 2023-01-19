@@ -5,7 +5,7 @@ namespace Iqbalatma\LaravelExtend\Traits;
 trait RepositoryFilter
 {
     static $defaultFilterOperator = "=";
-    public function searchColumn(array $filterableColumns = []): object
+    public function filterColumn(array $filterableColumns = []): object
     {
         $query = request()->query();
         if (isset($query["search"])) {
