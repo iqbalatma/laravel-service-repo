@@ -17,11 +17,11 @@ abstract class BaseService implements IService
      * @throws EmptyDataException
      * @return bool
      */
-    public function checkData(int $id): bool
+    public function checkData(int $id, array $columns = ["*"]): bool
     {
-        $this->setData($this->repository->getDataById($id));
-        $isExist = $this->getData();
-        if (!$isExist) {
+        $data = $this->repository->getDataById($id);
+        $this->setData($data);
+        if (!$data) {
             throw new EmptyDataException("Data doesn't exists !");
         }
         return true;

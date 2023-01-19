@@ -53,18 +53,26 @@ abstract class BaseRepository implements IRepository
     /**
      * Use to get data by id
      *
-     * @param int $id
+     * @param int|array $id
      * @param array $columns
      * @return object|null
      */
-    public function getDataById(int $id, array $columns = ["*"]): ?object
+    public function getDataById(int|array $id, array $columns = ["*"]): ?object
     {
-        return $this->model
-            ->select($columns)
-            ->where("id", $id)
-            ->first();
+        $this->model->select($columns);
+        $this->model = is_array($id) ?
+            $this->model->find($id) :
+            $this->model->where("id", $id)->first();
+        return $this->model;
     }
 
+
+    /**
+     * Get data with where clause
+     * @param array $whereClause
+     * @param array $columns
+     * @return mixed
+     */
     public function getDataByWhereClause(array $whereClause, array $columns = ["*"])
     {
         return $this->model
