@@ -8,8 +8,9 @@ trait RepositorySearch
     {
         if (request()->input("search")) {
             $searchTerm = request()->input("search");
+
             foreach ($searchableColumn as $key => $value) {
-                $this->model = $this->model->where($value, "LIKE", "%$searchTerm%");
+                $this->model = $this->model->orWhere($value, "LIKE", "%$searchTerm%");
             }
         }
 
