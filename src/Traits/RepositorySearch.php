@@ -12,5 +12,7 @@ trait RepositorySearch
                 $this->model = $this->model->where($value, "LIKE", "%$searchTerm%");
             }
         }
+
+        return $this;
     }
 }
