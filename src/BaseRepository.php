@@ -4,10 +4,11 @@ namespace Iqbalatma\LaravelExtend;
 
 use Iqbalatma\LaravelExtend\Interfaces\IRepository;
 use Iqbalatma\LaravelExtend\Traits\RepositoryFilter;
+use Iqbalatma\LaravelExtend\Traits\RepositorySearch;
 
 abstract class BaseRepository implements IRepository
 {
-    use RepositoryFilter;
+    use RepositoryFilter, RepositorySearch;
     protected const DEFAULT_PER_PAGE = 5;
     protected $model;
 
