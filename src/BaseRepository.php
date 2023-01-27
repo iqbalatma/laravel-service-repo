@@ -19,7 +19,7 @@ abstract class BaseRepository implements IRepository
      */
     public function with(array $with)
     {
-        $this->model->with($with);
+        $this->model = $this->model->with($with);
 
         return $this;
     }
