@@ -20,10 +20,10 @@ abstract class BaseService implements IService
     public function checkData(int $id, array $columns = ["*"]): bool
     {
         $data = $this->repository->getDataById($id);
-        $this->setData($data);
         if (!$data) {
             throw new EmptyDataException("Data doesn't exists !");
         }
+        $this->setData($data);
         return true;
     }
 
