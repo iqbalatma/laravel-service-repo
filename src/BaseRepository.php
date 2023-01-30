@@ -12,18 +12,18 @@ abstract class BaseRepository implements IRepository
     protected const DEFAULT_PER_PAGE = 5;
     protected $model;
 
+
     /**
-     * use with for relations
-     * @param array $with
+     * Use to add with relation on model
+     *
+     * @param array $relations
      * @return BaseRepository
      */
-    public function with(array $with)
+    public function with(array $relations): BaseRepository
     {
-        $this->model = $this->model->with($with);
-
+        $this->model = $this->model->with($relations);
         return $this;
     }
-
 
     /**
      * Use to get all data with pagination
@@ -60,11 +60,7 @@ abstract class BaseRepository implements IRepository
      */
     public function getDataById(int|array $id, array $columns = ["*"]): ?object
     {
-        $this->model->select($columns);
-        $this->model = is_array($id) ?
-            $this->model->find($id) :
-            $this->model->where("id", $id)->first();
-        return $this->model;
+        return $this->model->select($columns)->find($id);
     }
 
 
