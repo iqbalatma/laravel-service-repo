@@ -26,6 +26,18 @@ abstract class BaseRepository implements IRepository
     }
 
     /**
+     * Use to order by the repository
+     * @param string $column
+     * @param string $order
+     * @return BaseRepository
+     */
+    public function orderBy(string $column, string $order = "ASC"): BaseRepository
+    {
+        $this->model = $this->model->orderBy($column, $order);
+        return $this;
+    }
+
+    /**
      * Use to get all data with pagination
      * @param array $columns
      * @param int $perPage
