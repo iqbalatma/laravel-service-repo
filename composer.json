@@ -1,10 +1,10 @@
 {
-	"name": "iqbalatma/laravel-extend",
-	"description": "Project for extend base class on laracel",
+	"name": "iqbalatma/laravel-service-repo",
+	"description": "Project for extend base class on laravel with service repo pattern",
 	"type": "library",
 	"autoload": {
 		"psr-4": {
-			"Iqbalatma\\LaravelExtend\\": "src/"
+			"Iqbalatma\\LaravelServiceRepo\\": "src/"
 		}
 	},
 	"authors": [
@@ -19,7 +19,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Iqbalatma\\LaravelExtend\\ServiceRepoProvider"
+                "Iqbalatma\\LaravelServiceRepo\\ServiceRepoProvider"
             ]
         }
     }

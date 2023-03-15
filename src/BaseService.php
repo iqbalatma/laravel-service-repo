@@ -1,9 +1,9 @@
 <?php
 
-namespace Iqbalatma\LaravelExtend;
+namespace Iqbalatma\LaravelServiceRepo;
 
-use Iqbalatma\LaravelExtend\Exceptions\EmptyDataException;
-use Iqbalatma\LaravelExtend\Contracts\IService;
+use Iqbalatma\LaravelServiceRepo\Exceptions\EmptyDataException;
+use Iqbalatma\LaravelServiceRepo\Contracts\IService;
 
 abstract class BaseService implements IService
 {

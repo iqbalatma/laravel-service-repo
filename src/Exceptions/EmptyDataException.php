@@ -1,6 +1,6 @@
 <?php
 
-namespace Iqbalatma\LaravelExtend\Exceptions;
+namespace Iqbalatma\LaravelServiceRepo\Exceptions;
 
 use Exception;
 use Illuminate\Http\JsonResponse;

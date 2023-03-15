@@ -1,6 +1,6 @@
 <?php
 
-namespace Iqbalatma\LaravelExtend\Contracts;
+namespace Iqbalatma\LaravelServiceRepo\Contracts;
 
 interface IService
 {

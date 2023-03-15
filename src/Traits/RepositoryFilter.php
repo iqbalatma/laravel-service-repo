@@ -1,8 +1,8 @@
 <?php
 
-namespace Iqbalatma\LaravelExtend\Traits;
+namespace Iqbalatma\LaravelServiceRepo\Traits;
 
-use Iqbalatma\LaravelExtend\BaseRepository;
+use Iqbalatma\LaravelServiceRepo\BaseRepository;
 
 trait RepositoryFilter
 {

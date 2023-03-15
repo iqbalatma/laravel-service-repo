@@ -1,11 +1,11 @@
 <?php
 
-namespace Iqbalatma\LaravelExtend;
+namespace Iqbalatma\LaravelServiceRepo;
 
-use Iqbalatma\LaravelExtend\Contracts\IRepository;
-use Iqbalatma\LaravelExtend\Traits\RepositoryExtend;
-use Iqbalatma\LaravelExtend\Traits\RepositoryFilter;
-use Iqbalatma\LaravelExtend\Traits\RepositorySearch;
+use Iqbalatma\LaravelServiceRepo\Contracts\IRepository;
+use Iqbalatma\LaravelServiceRepo\Traits\RepositoryExtend;
+use Iqbalatma\LaravelServiceRepo\Traits\RepositoryFilter;
+use Iqbalatma\LaravelServiceRepo\Traits\RepositorySearch;
 
 abstract class BaseRepository implements IRepository
 {

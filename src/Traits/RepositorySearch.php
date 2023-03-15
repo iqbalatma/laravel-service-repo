@@ -1,7 +1,6 @@
 <?php
 
-namespace Iqbalatma\LaravelExtend\Traits;
-use Iqbalatma\LaravelExtend\Exceptions\EmptyDataException;
+namespace Iqbalatma\LaravelServiceRepo\Traits;
 
 trait RepositorySearch
 {

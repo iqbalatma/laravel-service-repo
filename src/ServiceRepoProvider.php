@@ -1,6 +1,6 @@
 <?php
 
-namespace Iqbalatma\LaravelExtend;
+namespace Iqbalatma\LaravelServiceRepo;
 
 use Illuminate\Support\ServiceProvider;
 
