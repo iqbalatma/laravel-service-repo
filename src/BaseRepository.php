@@ -9,7 +9,7 @@ use Iqbalatma\LaravelExtend\Traits\RepositorySearch;
 abstract class BaseRepository implements IRepository
 {
     use RepositoryFilter, RepositorySearch;
-    protected const DEFAULT_PER_PAGE = 5;
+    protected const DEFAULT_PER_PAGE = config("servicerepo.per_page");
     protected $model;
 
 
