@@ -11,9 +11,7 @@ class ServiceRepoProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->publishes([
-            __DIR__.'/config/servicerepo.php' => config_path('servicerepo.php'),
-        ]);
+
     }
 
     /**
@@ -21,6 +19,8 @@ class ServiceRepoProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->publishes([
+            __DIR__.'/config/servicerepo.php' => config_path('servicerepo.php'),
+        ]);
     }
 }
