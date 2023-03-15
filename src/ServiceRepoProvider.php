@@ -11,7 +11,7 @@ class ServiceRepoProvider extends ServiceProvider
      */
     public function register(): void
     {
-
+        $this->mergeConfigFrom(__DIR__.'/config/servicerepo.php', 'servicerepo');
     }
 
     /**

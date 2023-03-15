@@ -9,7 +9,6 @@ use Iqbalatma\LaravelExtend\Traits\RepositorySearch;
 abstract class BaseRepository implements IRepository
 {
     use RepositoryFilter, RepositorySearch;
-    protected const DEFAULT_PER_PAGE = config("servicerepo.per_page");
     protected $model;
 
 
@@ -43,11 +42,11 @@ abstract class BaseRepository implements IRepository
      * @param int $perPage
      * @return object|null
      */
-    public function getAllDataPaginated(array $columns = ["*"], int $perPage = self::DEFAULT_PER_PAGE): ?object
+    public function getAllDataPaginated(array $columns = ["*"], int $perPage = null): ?object
     {
         return $this->model
             ->select($columns)
-            ->paginate($perPage);
+            ->paginate($perPage ? $perPage : config("servicerepo.per_page"));
     }
 
     /**
