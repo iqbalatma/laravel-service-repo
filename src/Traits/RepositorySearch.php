@@ -4,11 +4,15 @@ namespace Iqbalatma\LaravelExtend\Traits;
 
 trait RepositorySearch
 {
-    public function searchableColumn(array $searchableColumn)
+    /**
+     * Use to searchable column
+     *
+     * @param array $searchableColumn
+     * @return object
+     */
+    public function searchableColumn(array $searchableColumn = []):object
     {
-        if (request()->input("search")) {
-            $searchTerm = request()->input("search");
-
+        if ($searchTerm  = request()->input("search")) {
             foreach ($searchableColumn as $key => $value) {
                 $this->model = $this->model->orWhere($value, "LIKE", "%$searchTerm%");
             }

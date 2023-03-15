@@ -5,6 +5,13 @@ namespace Iqbalatma\LaravelExtend\Traits;
 trait RepositoryFilter
 {
     static $defaultFilterOperator = "=";
+
+    /**
+     * Use to filter with column param
+     *
+     * @param array $filterableColumns
+     * @return object
+     */
     public function filterColumn(array $filterableColumns = []): object
     {
         $query = request()->query();
@@ -22,6 +29,16 @@ trait RepositoryFilter
         return $this;
     }
 
+
+    /**
+     * This is use to apply filter operator
+     *
+     * @param array $columns
+     * @param array $values
+     * @param array $operators
+     * @param array $filterableColumns
+     * @return void
+     */
     private function applyWhereClause(array $columns, array $values, array $operators, array $filterableColumns): void
     {
         for ($i = 0; $i < count($columns); $i++) {
