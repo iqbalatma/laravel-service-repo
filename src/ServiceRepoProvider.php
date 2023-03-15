@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace Iqbalatma\LaravelExtend;
 
 use Illuminate\Support\ServiceProvider;
 
