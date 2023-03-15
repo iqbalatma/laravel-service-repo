@@ -3,38 +3,14 @@
 namespace Iqbalatma\LaravelExtend;
 
 use Iqbalatma\LaravelExtend\Contracts\IRepository;
+use Iqbalatma\LaravelExtend\Traits\RepositoryExtend;
 use Iqbalatma\LaravelExtend\Traits\RepositoryFilter;
 use Iqbalatma\LaravelExtend\Traits\RepositorySearch;
 
 abstract class BaseRepository implements IRepository
 {
-    use RepositoryFilter, RepositorySearch;
+    use RepositoryFilter, RepositorySearch, RepositoryExtend;
     protected $model;
-
-
-    /**
-     * Use to add with relation on model
-     *
-     * @param array $relations
-     * @return BaseRepository
-     */
-    public function with(array $relations): BaseRepository
-    {
-        $this->model = $this->model->with($relations);
-        return $this;
-    }
-
-    /**
-     * Use to order by the repository
-     * @param string $column
-     * @param string $order
-     * @return BaseRepository
-     */
-    public function orderBy(string $column, string $order = "ASC"): BaseRepository
-    {
-        $this->model = $this->model->orderBy($column, $order);
-        return $this;
-    }
 
     /**
      * Use to get all data with pagination
@@ -42,11 +18,11 @@ abstract class BaseRepository implements IRepository
      * @param int $perPage
      * @return object|null
      */
-    public function getAllDataPaginated(array $columns = ["*"], int $perPage = null): ?object
+    public function getAllDataPaginated(array $columns = ["*"]): ?object
     {
         return $this->model
             ->select($columns)
-            ->paginate($perPage ? $perPage : config("servicerepo.per_page"));
+            ->paginate(request()->query("per_page", config("servicerepo.per_page")));
     }
 
     /**

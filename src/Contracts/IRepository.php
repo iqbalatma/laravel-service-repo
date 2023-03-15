@@ -5,7 +5,7 @@ namespace Iqbalatma\LaravelExtend\Contracts;
 interface IRepository
 {
     public function filterColumn(): object;
-    public function getAllDataPaginated(array $columns = ["*"], int $perPage): ?object;
+    public function getAllDataPaginated(array $columns = ["*"]): ?object;
     public function getAllData(array $columns = ["*"]): ?object;
     public function getDataById(int|array $id, array $columns = ["*"]): ?object;
     public function addNewData(array $requestedData): object;
