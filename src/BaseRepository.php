@@ -2,7 +2,7 @@
 
 namespace Iqbalatma\LaravelExtend;
 
-use Iqbalatma\LaravelExtend\Interfaces\IRepository;
+use Iqbalatma\LaravelExtend\Contracts\IRepository;
 use Iqbalatma\LaravelExtend\Traits\RepositoryFilter;
 use Iqbalatma\LaravelExtend\Traits\RepositorySearch;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Iqbalatma\LaravelExtend\Interfaces;
+namespace Iqbalatma\LaravelExtend\Contracts;
 
 interface IRepository
 {

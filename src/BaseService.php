@@ -3,7 +3,7 @@
 namespace Iqbalatma\LaravelExtend;
 
 use Iqbalatma\LaravelExtend\Exceptions\EmptyDataException;
-use Iqbalatma\LaravelExtend\Interfaces\IService;
+use Iqbalatma\LaravelExtend\Contracts\IService;
 
 abstract class BaseService implements IService
 {
