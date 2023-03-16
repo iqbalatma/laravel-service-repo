@@ -35,12 +35,8 @@ abstract class BaseService implements IService
      */
     public function isExists($data):void
     {
-        $message = "Data doesn't exists !";
-        if(!$data){
-            throw new EmptyDataException($message);
-        }
-        if($data->count()==0){
-            throw new EmptyDataException($message);
+        if($data?->count()==0 || !$data){
+            throw new EmptyDataException("Data doesn't exists !");
         }
     }
 

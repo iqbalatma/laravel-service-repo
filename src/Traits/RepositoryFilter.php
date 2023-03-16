@@ -15,7 +15,7 @@ trait RepositoryFilter
      * @param array $filterableColumns
      * @return object
      */
-    public function filterColumn(array $filterableColumns = []): object
+    public function filterColumn(array $filterableColumns): BaseRepository
     {
         $query = request()->query();
         if (isset($query["filter"])) {
@@ -23,9 +23,8 @@ trait RepositoryFilter
             $columns = $queryParams["columns"] ?? [];
             $values = $queryParams["values"] ?? [];
             $operators = $queryParams["operators"] ?? [];
-            $orders = $queryParams["orders"] ?? [];
             if (count($columns) > 0 && count($filterableColumns) > 0) {
-                $this->applyWhereClause($columns, $values, $operators, $orders, $filterableColumns);
+                $this->applyWhereClause($columns, $values, $operators, $filterableColumns);
             }
         };
 
@@ -43,13 +42,12 @@ trait RepositoryFilter
      * @param array $filterableColumns
      * @return void
      */
-    private function applyWhereClause(array $columns, array $values, array $operators, array $orders, array $filterableColumns): void
+    private function applyWhereClause(array $columns, array $values, array $operators, array $filterableColumns): void
     {
         for ($i = 0; $i < count($columns); $i++) {
             if (isset($columns[$i]) && isset($values[$i]) && isset($filterableColumns[$columns[$i]])) {
                 $value = $values[$i];
                 $operator =  $operators[$i] ?? self::$defaultFilterOperator;
-                $order = $orders[$i] ?? self::$defaultOrder;
                 $this->checkLikeOperator($operator, $value);
                 $this->model = $this->model
                     ->where(
@@ -57,7 +55,6 @@ trait RepositoryFilter
                         $operator,
                         $value
                     );
-                $this->orderBy($filterableColumns[$columns[$i]], $order);
             }
         }
     }
@@ -75,17 +72,5 @@ trait RepositoryFilter
         if (strtolower($operator) == "like") {
             $value = "%$value%";
         }
-    }
-
-    /**
-     * Use to order by the repository
-     * @param string $column
-     * @param string $order
-     * @return BaseRepository
-     */
-    public function orderBy(string $column, string $order = "ASC"): BaseRepository
-    {
-        $this->model = $this->model->orderBy($column, $order);
-        return $this;
     }
 }
