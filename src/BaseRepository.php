@@ -22,7 +22,7 @@ abstract class BaseRepository implements IRepository
     {
         return $this->model
             ->select($columns)
-            ->paginate(request()->query("per_page", config("servicerepo.per_page")));
+            ->paginate(request()->query("perpage", config("servicerepo.perpage")));
     }
 
     /**

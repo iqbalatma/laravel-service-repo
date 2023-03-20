@@ -9,7 +9,5 @@ return [
     | per page is 10
     |
     */
-    "per_page" => 10
+    "perpage" => 15
 ];
-
-?>
