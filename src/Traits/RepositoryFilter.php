@@ -44,17 +44,29 @@ trait RepositoryFilter
      */
     private function applyWhereClause(array $columns, array $values, array $operators, array $filterableColumns): void
     {
+        $columnExists = [];
         for ($i = 0; $i < count($columns); $i++) {
             if (isset($columns[$i]) && isset($values[$i]) && isset($filterableColumns[$columns[$i]])) {
                 $value = $values[$i];
                 $operator =  $operators[$i] ?? self::$defaultFilterOperator;
                 $this->checkLikeOperator($operator, $value);
-                $this->model = $this->model
-                    ->where(
-                        $filterableColumns[$columns[$i]],
-                        $operator,
-                        $value
-                    );
+
+                if (in_array($filterableColumns[$columns[$i]], $columnExists)) {
+                    $this->model = $this->model
+                        ->orWhere(
+                            $filterableColumns[$columns[$i]],
+                            $operator,
+                            $value
+                        );
+                } else {
+                    array_push($columnExists,  $filterableColumns[$columns[$i]]);
+                    $this->model = $this->model
+                        ->where(
+                            $filterableColumns[$columns[$i]],
+                            $operator,
+                            $value
+                        );
+                }
             }
         }
     }
