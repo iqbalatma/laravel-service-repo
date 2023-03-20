@@ -44,25 +44,50 @@ trait RepositoryFilter
      */
     private function applyWhereClause(array $columns, array $values, array $operators, array $filterableColumns): void
     {
+        // use to set duplicate column
         $columnExists = [];
-        for ($i = 0; $i < count($columns); $i++) {
-            if (isset($columns[$i]) && isset($values[$i]) && isset($filterableColumns[$columns[$i]])) {
-                $value = $values[$i];
-                $operator =  $operators[$i] ?? self::$defaultFilterOperator;
+        $groupingValueIndexs = [];
+        $countColumns = array_count_values($columns);
+        foreach ($countColumns as $key => $value) {
+            if ($value > 1 && isset($filterableColumns[$key])) {
+                array_push($columnExists, $key);
+                foreach ($columns as $subKey => $subValue) {
+                    if ($subValue == $key) {
+                        if (isset($values[$subKey])) {
+                            $groupingValueIndexs[$key][$subKey] = $values[$subKey];
+                        }
+                    }
+                }
+            }
+        }
+
+        foreach ($columnExists as $key => $column) {
+            $groupingValues = $groupingValueIndexs[$column];
+            $this->model = $this->model->where(function ($query) use ($groupingValues, $column) {
+                foreach ($groupingValues as $subKey => $value) {
+                    $query->orWhere($column, $value);
+                }
+            });
+
+            // to unset duplicate column
+            foreach ($columns as $subKey => $subValue) {
+                if ($subValue == $column) {
+                    unset($columns[$subKey]);
+                }
+            }
+        }
+
+        foreach ($columns as $key => $column) {
+            if (isset($column) && isset($values[$key]) && isset($filterableColumns[$column])) {
+                $value = $values[$key];
+                $operator =  $operators[$key] ?? self::$defaultFilterOperator;
+                $column = $filterableColumns[$column];
                 $this->checkLikeOperator($operator, $value);
 
-                if (in_array($filterableColumns[$columns[$i]], $columnExists)) {
-                    $this->model = $this->model
-                        ->orWhere(
-                            $filterableColumns[$columns[$i]],
-                            $operator,
-                            $value
-                        );
-                } else {
-                    array_push($columnExists,  $filterableColumns[$columns[$i]]);
+                if (!in_array($column, $columnExists)) {
                     $this->model = $this->model
                         ->where(
-                            $filterableColumns[$columns[$i]],
+                            $column,
                             $operator,
                             $value
                         );
