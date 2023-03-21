@@ -62,19 +62,21 @@ trait RepositoryFilter
         }
 
         foreach ($columnExists as $key => $column) {
-            $groupingValues = $groupingValueIndexs[$column];
-            $this->model = $this->model->where(function ($query) use ($groupingValues, $column) {
-                foreach ($groupingValues as $subKey => $value) {
-                    $query->orWhere($column, $value);
-                }
-            });
+           if (isset($groupingValueIndexs[$column])) {
+                $groupingValues = $groupingValueIndexs[$column];
+                $this->model = $this->model->where(function ($query) use ($groupingValues, $column) {
+                    foreach ($groupingValues as $subKey => $value) {
+                        $query->orWhere($column, $value);
+                    }
+                });
 
-            // to unset duplicate column
-            foreach ($columns as $subKey => $subValue) {
-                if ($subValue == $column) {
-                    unset($columns[$subKey]);
+                // to unset duplicate column
+                foreach ($columns as $subKey => $subValue) {
+                    if ($subValue == $column) {
+                        unset($columns[$subKey]);
+                    }
                 }
-            }
+           }
         }
 
         foreach ($columns as $key => $column) {
