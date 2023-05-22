@@ -4,5 +4,5 @@ namespace Iqbalatma\LaravelServiceRepo\Contracts;
 
 interface IService
 {
-    public function checkData(int $id): bool;
+    public function checkData(string|int $id, array $columns = ["*"]): bool;
 }

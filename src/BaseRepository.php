@@ -10,14 +10,17 @@ use Iqbalatma\LaravelServiceRepo\Traits\RepositoryExtend;
 use Iqbalatma\LaravelServiceRepo\Traits\RepositoryFilter;
 use Iqbalatma\LaravelServiceRepo\Traits\RepositorySearch;
 
+
 abstract class BaseRepository implements IRepository
 {
     use RepositoryFilter, RepositorySearch, RepositoryExtend;
+
 
     /**
      * @var Model $model
      */
     protected $model;
+
 
     /**
      * Use to get all data with pagination and where clause as optional param
@@ -78,6 +81,7 @@ abstract class BaseRepository implements IRepository
             ->where($whereClause)
             ->first();
     }
+
 
     /**
      * Use to add new data to model
@@ -143,6 +147,7 @@ abstract class BaseRepository implements IRepository
             ->where("id", $id)
             ->delete();
     }
+
 
     /**
      * Use to delete data model by where clause(mass delete)
