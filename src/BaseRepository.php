@@ -3,6 +3,7 @@
 namespace Iqbalatma\LaravelServiceRepo;
 
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Iqbalatma\LaravelServiceRepo\Contracts\IRepository;
 use Iqbalatma\LaravelServiceRepo\Traits\RepositoryExtend;
@@ -45,26 +46,28 @@ abstract class BaseRepository implements IRepository
             ->get();
     }
 
+
     /**
      * Use to get data by id
      *
-     * @param int|array $id
+     * @param string|int|array $id
      * @param array $columns
-     * @return object|null
+     * @return Model|Collection|null
      */
-    public function getDataById(int|array $id, array $columns = ["*"]): ?object
+    public function getDataById(string|int|array $id, array $columns = ["*"]):  Model|Collection|null
     {
         return $this->model->select($columns)->find($id);
     }
 
 
     /**
-     * Get data with where clause
+     * Get single data with where clause
+     *
      * @param array $whereClause
      * @param array $columns
-     * @return mixed
+     * @return Model|null
      */
-    public function getDataByWhereClause(array $whereClause, array $columns = ["*"])
+    public function getSingleDataDataByWhereClause(array $whereClause, array $columns = ["*"]):?Model
     {
         return $this->model
             ->select($columns)
@@ -76,31 +79,51 @@ abstract class BaseRepository implements IRepository
      * Use to add new data to model
      *
      * @param array $requestedData
-     * @return object
+     * @return Model
      */
-    public function addNewData(array $requestedData): object
+    public function addNewData(array $requestedData): Model
     {
         return $this->model->create($requestedData);
     }
 
+
     /**
-     * Use to update data model by id
+     * Use to update data model by id (single update)
      *
-     * @param int $id
+     * @param string|int $id
      * @param array $requestedData
      * @param array $columns
      * @param bool $isReturnObject
-     * @return int|object|null
+     * @return int|Model|null
      */
-    public function updateDataById(int $id, array $requestedData, array $columns = ["*"], bool $isReturnObject = true): int|object|null
+    public function updateDataById(string|int $id, array $requestedData, array $columns = ["*"], bool $isReturnObject = true): int|Model|null
     {
         $updatedData = $this->model
             ->where("id", $id)
             ->update($requestedData);
-        if (!$isReturnObject) {
-            return $updatedData;
-        }
+        if (!$isReturnObject) return $updatedData;
+
         return $this->model->find($id, $columns);
+    }
+
+
+    /**
+     * Use to update data by where clause (mass update)
+     *
+     * @param array $whereClause
+     * @param array $requestedData
+     * @param array $columns
+     * @param bool $isReturnObject
+     * @return int|Model|null
+     */
+    public function updateDataByWhereClause(array $whereClause, array $requestedData, array $columns = ["*"], bool $isReturnObject = true): int|Collection|null
+    {
+        $updatedData = $this->model
+            ->where($whereClause)
+            ->update($requestedData);
+        if (!$isReturnObject) return $updatedData;
+
+        return $this->getAllData($whereClause, $columns);
     }
 
 
