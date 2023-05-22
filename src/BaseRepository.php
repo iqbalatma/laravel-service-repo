@@ -2,6 +2,8 @@
 
 namespace Iqbalatma\LaravelServiceRepo;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Iqbalatma\LaravelServiceRepo\Contracts\IRepository;
 use Iqbalatma\LaravelServiceRepo\Traits\RepositoryExtend;
 use Iqbalatma\LaravelServiceRepo\Traits\RepositoryFilter;
@@ -13,28 +15,33 @@ abstract class BaseRepository implements IRepository
     protected $model;
 
     /**
-     * Use to get all data with pagination
+     * Use to get all data with pagination and where clause as optional param
+     *
+     * @param array $whereClause
      * @param array $columns
-     * @param int $perPage
-     * @return object|null
+     * @return LengthAwarePaginator
      */
-    public function getAllDataPaginated(array $columns = ["*"]): ?object
+    public function getAllDataPaginated(array $whereClause = [], array $columns = ["*"]): LengthAwarePaginator
     {
         return $this->model
             ->select($columns)
+            ->where($whereClause)
             ->paginate(request()->query("perpage", config("servicerepo.perpage")));
     }
 
+
     /**
-     * Use to get all data withoud pagination
+     * Use to get all data without pagination
      *
+     * @param array $whereClause
      * @param array $columns
-     * @return object|null
+     * @return Collection
      */
-    public function getAllData(array $columns = ["*"]): ?object
+    public function getAllData(array $whereClause = [], array $columns = ["*"]): Collection
     {
         return $this->model
             ->select($columns)
+            ->where($whereClause)
             ->get();
     }
 
