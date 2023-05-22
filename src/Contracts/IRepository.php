@@ -17,5 +17,6 @@ interface IRepository
     public function addNewData(array $requestedData): Model;
     public function updateDataById(string|int $id, array $requestedData, array $columns = ["*"], bool $isReturnObject = true): int|Model|null;
     public function updateDataByWhereClause(array $whereClause, array $requestedData, array $columns = ["*"], bool $isReturnObject = true): int|Collection|null;
-    public function deleteDataById(int $id): int;
+    public function deleteDataById(string|int $id): int;
+    public function deleteDataByWhereClause(array $whereClause): int;
 }

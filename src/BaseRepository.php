@@ -13,6 +13,10 @@ use Iqbalatma\LaravelServiceRepo\Traits\RepositorySearch;
 abstract class BaseRepository implements IRepository
 {
     use RepositoryFilter, RepositorySearch, RepositoryExtend;
+
+    /**
+     * @var Model $model
+     */
     protected $model;
 
     /**
@@ -128,15 +132,28 @@ abstract class BaseRepository implements IRepository
 
 
     /**
-     * Use to delete data model by value
+     * Use to delete data model by id (single delete)
      *
-     * @param int $id
+     * @param string|int $id
      * @return int
      */
-    public function deleteDataById(int $id): int
+    public function deleteDataById(string|int $id): int
     {
         return $this->model
             ->where("id", $id)
+            ->delete();
+    }
+
+    /**
+     * Use to delete data model by where clause(mass delete)
+     *
+     * @param array $whereClause
+     * @return int
+     */
+    public function deleteDataByWhereClause(array $whereClause): int
+    {
+        return $this->model
+            ->where($whereClause)
             ->delete();
     }
 }
