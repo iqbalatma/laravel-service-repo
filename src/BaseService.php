@@ -2,38 +2,54 @@
 
 namespace Iqbalatma\LaravelServiceRepo;
 
+use Google\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Iqbalatma\LaravelServiceRepo\Exceptions\EmptyDataException;
 use Iqbalatma\LaravelServiceRepo\Contracts\IService;
 
 abstract class BaseService implements IService
 {
+    /**
+     * @var BaseRepository $repository
+     */
     protected $repository;
-    protected object $data;
+
 
     /**
-     * Check is data exists by id
-     *
-     * @param int $id
-     * @throws EmptyDataException
-     * @return bool
+     * @var Model $serviceEntity
      */
-    public function checkData(int $id, array $columns = ["*"]): bool
+    protected Model $serviceEntity;
+
+    /**
+     * @var array $requestedData
+     */
+    protected array $requestedData;
+
+    /**
+     * Use to check is data exists
+     * @param string|int $id
+     * @param array $columns
+     * @return bool
+     * @throws EmptyDataException
+     */
+    public function checkData(string|int $id, array $columns = ["*"]): bool
     {
-        $data = $this->repository->getDataById($id);
-        if (!$data) {
+        $entity = $this->repository->getDataById($id);
+        if (!$entity) {
             throw new EmptyDataException("Data doesn't exists !");
         }
-        $this->setData($data);
+        $this->setServiceEntity($entity);
         return true;
     }
 
     /**
-     * Use to check is data exists
+     * Use to check data or entity exists
      *
-     * @param [type] $data
-     * @return boolean
+     * @param mixed $data
+     * @return void
+     * @throws EmptyDataException
      */
-    public function isExists($data):void
+    public function isExists(mixed $data):void
     {
         if($data?->count()==0 || !$data){
             throw new EmptyDataException("Data doesn't exists !");
@@ -41,20 +57,41 @@ abstract class BaseService implements IService
     }
 
     /**
-     * @return object
+     * @param Model $serviceEntity
+     * @return $this
      */
-    public function getData(): object
+    public function setServiceEntity(Model $serviceEntity):self
     {
-        return $this->data;
+        $this->serviceEntity = $serviceEntity;
+        return $this;
     }
 
+
     /**
-     * @param object $data
-     * @return self
+     * @return Model
      */
-    public function setData(object $data): self
+    public function getServiceEntity():Model
     {
-        $this->data = $data;
+        return $this->serviceEntity;
+    }
+
+
+    /**
+     * @param array $requestedData
+     * @return $this
+     */
+    protected function setRequestedData(array $requestedData): self
+    {
+        $this->requestedData = $requestedData;
         return $this;
+    }
+
+
+    /**
+     * @return array
+     */
+    protected function getRequestedData(): array
+    {
+        return $this->requestedData;
     }
 }

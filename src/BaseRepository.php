@@ -2,62 +2,79 @@
 
 namespace Iqbalatma\LaravelServiceRepo;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Iqbalatma\LaravelServiceRepo\Contracts\IRepository;
 use Iqbalatma\LaravelServiceRepo\Traits\RepositoryExtend;
 use Iqbalatma\LaravelServiceRepo\Traits\RepositoryFilter;
 use Iqbalatma\LaravelServiceRepo\Traits\RepositorySearch;
 
+
 abstract class BaseRepository implements IRepository
 {
     use RepositoryFilter, RepositorySearch, RepositoryExtend;
-    protected $model;
+
 
     /**
-     * Use to get all data with pagination
-     * @param array $columns
-     * @param int $perPage
-     * @return object|null
+     * @var Model $model
      */
-    public function getAllDataPaginated(array $columns = ["*"]): ?object
+    protected $model;
+
+
+    /**
+     * Use to get all data with pagination and where clause as optional param
+     *
+     * @param array $whereClause
+     * @param array $columns
+     * @return LengthAwarePaginator
+     */
+    public function getAllDataPaginated(array $whereClause = [], array $columns = ["*"]): LengthAwarePaginator
     {
         return $this->model
             ->select($columns)
+            ->where($whereClause)
             ->paginate(request()->query("perpage", config("servicerepo.perpage")));
     }
 
+
     /**
-     * Use to get all data withoud pagination
+     * Use to get all data without pagination
      *
+     * @param array $whereClause
      * @param array $columns
-     * @return object|null
+     * @return Collection
      */
-    public function getAllData(array $columns = ["*"]): ?object
+    public function getAllData(array $whereClause = [], array $columns = ["*"]): Collection
     {
         return $this->model
             ->select($columns)
+            ->where($whereClause)
             ->get();
     }
+
 
     /**
      * Use to get data by id
      *
-     * @param int|array $id
+     * @param string|int|array $id
      * @param array $columns
-     * @return object|null
+     * @return Model|Collection|null
      */
-    public function getDataById(int|array $id, array $columns = ["*"]): ?object
+    public function getDataById(string|int|array $id, array $columns = ["*"]):  Model|Collection|null
     {
         return $this->model->select($columns)->find($id);
     }
 
 
     /**
-     * Get data with where clause
+     * Get single data with where clause
+     *
      * @param array $whereClause
      * @param array $columns
-     * @return mixed
+     * @return Model|null
      */
-    public function getDataByWhereClause(array $whereClause, array $columns = ["*"])
+    public function getSingleDataDataByWhereClause(array $whereClause, array $columns = ["*"]):?Model
     {
         return $this->model
             ->select($columns)
@@ -65,48 +82,83 @@ abstract class BaseRepository implements IRepository
             ->first();
     }
 
+
     /**
      * Use to add new data to model
      *
      * @param array $requestedData
-     * @return object
+     * @return Model
      */
-    public function addNewData(array $requestedData): object
+    public function addNewData(array $requestedData): Model
     {
         return $this->model->create($requestedData);
     }
 
+
     /**
-     * Use to update data model by id
+     * Use to update data model by id (single update)
      *
-     * @param int $id
+     * @param string|int $id
      * @param array $requestedData
      * @param array $columns
      * @param bool $isReturnObject
-     * @return int|object|null
+     * @return int|Model|null
      */
-    public function updateDataById(int $id, array $requestedData, array $columns = ["*"], bool $isReturnObject = true): int|object|null
+    public function updateDataById(string|int $id, array $requestedData, array $columns = ["*"], bool $isReturnObject = true): int|Model|null
     {
         $updatedData = $this->model
             ->where("id", $id)
             ->update($requestedData);
-        if (!$isReturnObject) {
-            return $updatedData;
-        }
+        if (!$isReturnObject) return $updatedData;
+
         return $this->model->find($id, $columns);
     }
 
 
     /**
-     * Use to delete data model by value
+     * Use to update data by where clause (mass update)
      *
-     * @param int $id
+     * @param array $whereClause
+     * @param array $requestedData
+     * @param array $columns
+     * @param bool $isReturnObject
+     * @return int|Model|null
+     */
+    public function updateDataByWhereClause(array $whereClause, array $requestedData, array $columns = ["*"], bool $isReturnObject = true): int|Collection|null
+    {
+        $updatedData = $this->model
+            ->where($whereClause)
+            ->update($requestedData);
+        if (!$isReturnObject) return $updatedData;
+
+        return $this->getAllData($whereClause, $columns);
+    }
+
+
+    /**
+     * Use to delete data model by id (single delete)
+     *
+     * @param string|int $id
      * @return int
      */
-    public function deleteDataById(int $id): int
+    public function deleteDataById(string|int $id): int
     {
         return $this->model
             ->where("id", $id)
+            ->delete();
+    }
+
+
+    /**
+     * Use to delete data model by where clause(mass delete)
+     *
+     * @param array $whereClause
+     * @return int
+     */
+    public function deleteDataByWhereClause(array $whereClause): int
+    {
+        return $this->model
+            ->where($whereClause)
             ->delete();
     }
 }
