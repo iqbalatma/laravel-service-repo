@@ -384,18 +384,21 @@ trait RepositoryExtend
         // if column is empty, use column from request query
         if (is_null($columns)) {
             $columns = request()->query("order_columns");
-            $orders = request()->query("order_intervals");
+            $direction = request()->query("order_directions");
             // we need to make sure that the param is array even we have default
-            if (gettype($columns) == "array") {
+            if (is_array($columns)) {
                 foreach ($columns as $key => $column) {
-                    if (isset($orderaleColumns[$column])) {
-                        if (isset($orders[$key])) {
-                            $direction = $orders[$key];
-                            if ($direction != "asc" && $direction != "desc") {
-                                $direction = "asc";
+                    if (isset($orderaleColumns[$column])) { //to check is requested column is allowed on orderable column
+
+
+//                        check order direction
+                        if (isset($direction[$key])) {
+                            $direction = $direction[$key];
+                            if ($direction != "ASC" && $direction != "DESC") {
+                                $direction = "ASC";
                             }
                         } else {
-                            $direction = "asc";
+                            $direction = "ASC";
                         }
 
                         $this->model = $this->model->orderBy($column, $direction);
