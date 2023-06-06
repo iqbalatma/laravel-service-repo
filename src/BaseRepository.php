@@ -74,7 +74,7 @@ abstract class BaseRepository implements IRepository
      * @param array $columns
      * @return Model|null
      */
-    public function getSingleDataDataByWhereClause(array $whereClause, array $columns = ["*"]):?Model
+    public function getSingleData(array $whereClause = [], array $columns = ["*"]):?Model
     {
         return $this->model
             ->select($columns)
