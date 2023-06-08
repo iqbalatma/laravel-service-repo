@@ -6,96 +6,82 @@ use Iqbalatma\LaravelServiceRepo\BaseRepository;
 
 trait RepositoryFilter
 {
-    static $defaultFilterOperator = "=";
-    static $defaultOrder = "ASC";
+    private static string $defaultOperator = "=";
 
     /**
-     * Use to filter with column param
+     * if the same column value is array, it will iterate it, and use or where clause
      *
      * @param array $filterableColumns
-     * @return object
+     * @return BaseRepository
      */
-    public function filterColumn(array $filterableColumns): BaseRepository
+    public function filterColumn(array $filterableColumns = [], array $relationFilterableColumn = []): BaseRepository
     {
         $query = request()->query();
         if (isset($query["filter"])) {
-            $queryParams = $query["filter"];
-            $columns = $queryParams["columns"] ?? [];
-            $values = $queryParams["values"] ?? [];
-            $operators = $queryParams["operators"] ?? [];
-            if (count($columns) > 0 && count($filterableColumns) > 0) {
-                $this->applyWhereClause($columns, $values, $operators, $filterableColumns);
-            }
-        };
+//            filter column for current model
+            $filter = array_intersect_key($query["filter"], $filterableColumns);
+            foreach ($filter as $columnName => $column) {
+                if (isset($column["value"])) {
+                    $value = $column["value"];
 
-        return $this;
-    }
+//                    operator check
+                    $operator = self::$defaultOperator;
+                    if (isset($column["operator"])) $operator = $column["operator"];
 
+//                    which mean the value is only 1
+                    if (is_string($value)) {
+                        $this->checkLikeOperator($operator, $value);
+                        $this->model = $this->model->where($filterableColumns[$columnName], $operator, $value);
+                    }
 
-    /**
-     * This is use to apply filter operator
-     *
-     * @param array $columns
-     * @param array $values
-     * @param array $operators
-     * @param array $orders
-     * @param array $filterableColumns
-     * @return void
-     */
-    private function applyWhereClause(array $columns, array $values, array $operators, array $filterableColumns): void
-    {
-        // use to set duplicate column
-        $columnExists = [];
-        $groupingValueIndexs = [];
-        $countColumns = array_count_values($columns);
-        foreach ($countColumns as $key => $value) {
-            if ($value > 1 && isset($filterableColumns[$key])) {
-                array_push($columnExists, $key);
-                foreach ($columns as $subKey => $subValue) {
-                    if ($subValue == $key) {
-                        if (isset($values[$subKey])) {
-                            $groupingValueIndexs[$key][$subKey] = $values[$subKey];
+//                    which mean the value is more than one
+                    if (is_array($value)) {
+                        foreach ($value as $subValue) {
+                            $this->checkLikeOperator($operator, $subValue);
+                            $this->model = $this->model->orWhere($filterableColumns[$columnName], $operator, $subValue);
                         }
                     }
                 }
             }
-        }
 
-        foreach ($columnExists as $key => $column) {
-           if (isset($groupingValueIndexs[$column])) {
-                $groupingValues = $groupingValueIndexs[$column];
-                $this->model = $this->model->where(function ($query) use ($groupingValues, $column) {
-                    foreach ($groupingValues as $subKey => $value) {
-                        $query->orWhere($column, $value);
+
+//            filter column for relation model
+            foreach ($relationFilterableColumn as $relation => $columns) {
+//                this is column that belongs to relation
+                $relationFilter = array_intersect_key($query["filter"], $columns);
+
+//                loop the columns. every column has query filter data
+                foreach ($relationFilter as $columnName => $column) {
+                    if (isset($column["value"])) {
+                        $value = $column["value"];
+
+                        $operator = self::$defaultOperator;
+                        if (isset($column["operator"])) $operator = $column["operator"];
+                        if (is_string($value)) {
+                            $this->checkLikeOperator($operator, $value);
+
+                            $this->model = $this->model->whereHas($relation, function ($query) use ($value, $operator, $columnName, $columns) {
+                                $query->where($columns[$columnName], $operator, $value);
+                            });
+                        }
+
+                        if (is_array($value)) {
+                            $operator = ">=";
+                            $count = 1;
+                            if(isset($column["behavior"]) && strtolower($column["behavior"]) == "and"){
+                                $operator = "=";
+                                $count = count($value);
+                            }
+                            $this->model = $this->model->whereHas($relation, function ($query) use ($value, $columnName, $columns) {
+                                $query->whereIn($columns[$columnName], $value);
+                            },$operator, $count);
+                        }
                     }
-                });
-
-                // to unset duplicate column
-                foreach ($columns as $subKey => $subValue) {
-                    if ($subValue == $column) {
-                        unset($columns[$subKey]);
-                    }
-                }
-           }
-        }
-
-        foreach ($columns as $key => $column) {
-            if (isset($column) && isset($values[$key]) && isset($filterableColumns[$column])) {
-                $value = $values[$key];
-                $operator =  $operators[$key] ?? self::$defaultFilterOperator;
-                $column = $filterableColumns[$column];
-                $this->checkLikeOperator($operator, $value);
-
-                if (!in_array($column, $columnExists)) {
-                    $this->model = $this->model
-                        ->where(
-                            $column,
-                            $operator,
-                            $value
-                        );
                 }
             }
-        }
+        };
+
+        return $this;
     }
 
 
