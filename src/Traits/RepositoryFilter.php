@@ -149,7 +149,7 @@ trait RepositoryFilter
                 if (is_array($value)) {
                     foreach ($value as $subValue) {
                         $this->checkLikeOperator($dbColumnName, $subValue);
-                        $this->model = $this->model->orWhere($dbColumnName, $dbColumnName, $subValue);
+                        $this->model = $this->model->orWhere($dbColumnName, $dbOperator, $subValue);
                     }
                 }
             }
