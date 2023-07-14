@@ -14,27 +14,44 @@ trait RepositoryOrder
      */
     public function orderBy(array $orderaleColumns = [], ?string $columns = null, ?string $direction = "ASC"): RepositoryOrder
     {
-        $query = request()->query();
-        // if column is empty, use column from request query
-        if (is_null($columns)) {
-            if (isset($query["order"]) && is_array($query["order"])) {
-                $columns = array_intersect_key($query["order"], $orderaleColumns);
+        $queryParam = request()->query();
+        if ($this->isMultipleOrderByRequest($columns, $queryParam)) {
+            $columns = array_intersect_key($queryParam["order"], $orderaleColumns);
 
-                foreach ($columns as $columnName => $requestDirection) {
-                    $requestDirection = strtoupper($requestDirection);
-
-                    //to set direction into ASC when direction is not between ASC or DESC
-                    if ($requestDirection !== "ASC" && $requestDirection !== "DESC") {
-                        $requestDirection = "ASC";
-                    }
-
-                    $this->model = $this->model->orderBy($columnName, $requestDirection);
-                }
+            foreach ($columns as $columnName => $requestDirection) {
+                $this->checkDirection($requestDirection);
+                $this->model = $this->model->orderBy($columnName, $requestDirection);
             }
         } else {
+            $this->checkDirection($direction);
             $this->model = $this->model->orderBy($columns, $direction);
         }
         return $this;
     }
 
+
+    /**
+     * Use set direction into ASC when direction is not between ASC or DESC
+     * @param $requestDirection
+     * @return void
+     */
+    private function checkDirection(&$requestDirection): void
+    {
+        $requestDirection = strtoupper($requestDirection);
+
+        if ($requestDirection !== "ASC" && $requestDirection !== "DESC") {
+            $requestDirection = "ASC";
+        }
+    }
+
+
+    /**
+     * @param string|null $columns
+     * @param array $queryParam
+     * @return bool
+     */
+    private function isMultipleOrderByRequest(?string $columns, array $queryParam): bool
+    {
+        return is_null($columns) && isset($queryParam["order"]) && is_array($queryParam["order"]);
+    }
 }
