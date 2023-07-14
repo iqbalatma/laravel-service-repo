@@ -5,14 +5,14 @@ namespace Iqbalatma\LaravelServiceRepo;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Iqbalatma\LaravelServiceRepo\Contracts\IRepository;
+use Iqbalatma\LaravelServiceRepo\Contracts\Interfaces\RepositoryInterface;
 use Iqbalatma\LaravelServiceRepo\Traits\RepositoryExtend;
 use Iqbalatma\LaravelServiceRepo\Traits\RepositoryFilter;
 use Iqbalatma\LaravelServiceRepo\Traits\RepositoryOrder;
 use Iqbalatma\LaravelServiceRepo\Traits\RepositorySearch;
 
 
-abstract class BaseRepository implements IRepository
+abstract class BaseRepository implements RepositoryInterface
 {
     use RepositoryFilter, RepositorySearch, RepositoryExtend, RepositoryOrder;
 
@@ -46,7 +46,7 @@ abstract class BaseRepository implements IRepository
      * @param array $columns
      * @return Collection
      */
-    public function getAllData(array $whereClause = [], array $columns = ["*"]): Collection
+    public function getAllData(array $whereClause = [], array $columns = ["*"]): Collection|null
     {
         return $this->model
             ->select($columns)
@@ -81,6 +81,14 @@ abstract class BaseRepository implements IRepository
             ->select($columns)
             ->where($whereClause)
             ->first();
+    }
+
+    /**
+     * @return Collection|null
+     */
+    public function get():Collection|null
+    {
+        return $this->model->get();
     }
 
 
@@ -144,6 +152,15 @@ abstract class BaseRepository implements IRepository
     {
         return $this->model->update($requestedData);
     }
+
+
+    /**
+     * @return int
+     */
+    public function delete():int{
+        return $this->model->delete();
+    }
+
 
 
     /**

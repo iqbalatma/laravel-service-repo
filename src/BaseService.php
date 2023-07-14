@@ -2,12 +2,11 @@
 
 namespace Iqbalatma\LaravelServiceRepo;
 
-use Google\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Iqbalatma\LaravelServiceRepo\Contracts\Interfaces\ServiceInterface;
 use Iqbalatma\LaravelServiceRepo\Exceptions\EmptyDataException;
-use Iqbalatma\LaravelServiceRepo\Contracts\IService;
 
-abstract class BaseService implements IService
+abstract class BaseService implements ServiceInterface
 {
     /**
      * @var BaseRepository $repository
@@ -80,7 +79,7 @@ abstract class BaseService implements IService
      * @param array $requestedData
      * @return $this
      */
-    protected function setRequestedData(array $requestedData): self
+    public function setRequestedData(array $requestedData): self
     {
         $this->requestedData = $requestedData;
         return $this;
@@ -90,7 +89,7 @@ abstract class BaseService implements IService
     /**
      * @return array
      */
-    protected function getRequestedData(): array
+    public function getRequestedData(): array
     {
         return $this->requestedData;
     }
