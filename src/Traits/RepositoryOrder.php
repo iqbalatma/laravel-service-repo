@@ -2,7 +2,6 @@
 
 namespace Iqbalatma\LaravelServiceRepo\Traits;
 
-use Iqbalatma\LaravelServiceRepo\BaseRepository;
 
 trait RepositoryOrder
 {
@@ -12,17 +11,19 @@ trait RepositoryOrder
      * @param string|null $direction
      * @return RepositoryOrder
      */
-    public function orderBy(array $orderaleColumns = [], ?string $columns = null, ?string $direction = "ASC"): RepositoryOrder
+    public function orderBy(array $orderaleColumns = [], ?string $columns = null, ?string $direction = "ASC"): self
     {
-        $queryParam = request()->query();
-        if ($this->isMultipleOrderByRequest($columns, $queryParam)) {
-            $columns = array_intersect_key($queryParam["order"], $orderaleColumns);
+        $requestQueryParam = request()->query();
+        if(is_null($columns)){
+            if ($this->isOrderRequestExists($requestQueryParam)) {
+                $columns = array_intersect_key($requestQueryParam["order"], $orderaleColumns);
 
-            foreach ($columns as $columnName => $requestDirection) {
-                $this->checkDirection($requestDirection);
-                $this->model = $this->model->orderBy($columnName, $requestDirection);
+                foreach ($columns as $columnName => $requestDirection) {
+                    $this->checkDirection($requestDirection);
+                    $this->model = $this->model->orderBy($columnName, $requestDirection);
+                }
             }
-        } else {
+        }else{
             $this->checkDirection($direction);
             $this->model = $this->model->orderBy($columns, $direction);
         }
@@ -46,12 +47,11 @@ trait RepositoryOrder
 
 
     /**
-     * @param string|null $columns
-     * @param array $queryParam
+     * @param array $requestQueryParam
      * @return bool
      */
-    private function isMultipleOrderByRequest(?string $columns, array $queryParam): bool
+    private function isOrderRequestExists(array $requestQueryParam): bool
     {
-        return is_null($columns) && isset($queryParam["order"]) && is_array($queryParam["order"]);
+        return isset($requestQueryParam["order"]) && is_array($requestQueryParam["order"]);
     }
 }
