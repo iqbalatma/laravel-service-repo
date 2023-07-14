@@ -8,12 +8,13 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Iqbalatma\LaravelServiceRepo\Contracts\IRepository;
 use Iqbalatma\LaravelServiceRepo\Traits\RepositoryExtend;
 use Iqbalatma\LaravelServiceRepo\Traits\RepositoryFilter;
+use Iqbalatma\LaravelServiceRepo\Traits\RepositoryOrder;
 use Iqbalatma\LaravelServiceRepo\Traits\RepositorySearch;
 
 
 abstract class BaseRepository implements IRepository
 {
-    use RepositoryFilter, RepositorySearch, RepositoryExtend;
+    use RepositoryFilter, RepositorySearch, RepositoryExtend, RepositoryOrder;
 
 
     /**
@@ -124,7 +125,7 @@ abstract class BaseRepository implements IRepository
      * @param bool $isReturnObject
      * @return int|Model|null
      */
-    public function updateDataByWhereClause(array $whereClause, array $requestedData, array $columns = ["*"], bool $isReturnObject = true): int|Collection|null
+    public function updateDataByWhereClause(array $whereClause, array $requestedData, array $columns = ["*"], bool $isReturnObject = false): int|Collection|null
     {
         $updatedData = $this->model
             ->where($whereClause)
@@ -132,6 +133,16 @@ abstract class BaseRepository implements IRepository
         if (!$isReturnObject) return $updatedData;
 
         return $this->getAllData($whereClause, $columns);
+    }
+
+
+    /**
+     * @param array $requestedData
+     * @return int
+     */
+    public function update(array $requestedData):int
+    {
+        return $this->model->update($requestedData);
     }
 
 

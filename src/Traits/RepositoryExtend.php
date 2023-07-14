@@ -2,21 +2,15 @@
 
 namespace Iqbalatma\LaravelServiceRepo\Traits;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Iqbalatma\LaravelServiceRepo\BaseRepository;
 
 trait RepositoryExtend
 {
     /**
-     * @var Model
-     */
-    protected $model;
-
-    /**
      * Use to add with relation on model
      *
-     * @param array $relations
+     * @param array|string $relations
      * @return BaseRepository
      */
     public function with(array|string $relations): BaseRepository
@@ -367,48 +361,6 @@ trait RepositoryExtend
     public function orWhereColumn(array|string $first, ?string $operator = null, ?string $second = null): BaseRepository
     {
         $this->model = $this->model->orWhereColumn($first, $operator, $second);
-        return $this;
-    }
-
-
-    /**
-     * Use to order by collection data
-     *
-     * @param array $orderaleColumns (param to let the function knows which column that allowed to order)
-     * @param string|null $column
-     * @param string|null $direction
-     * @return BaseRepository
-     */
-    public function orderBy(array $orderaleColumns, ?string $columns = null, ?string $direction = "ASC"): BaseRepository
-    {
-        // if column is empty, use column from request query
-        if (is_null($columns)) {
-            $columns = request()->query("order_columns");
-            $direction = request()->query("order_directions");
-            // we need to make sure that the param is array even we have default
-            if (is_array($columns)) {
-                foreach ($columns as $key => $column) {
-                    if (isset($orderaleColumns[$column])) { //to check is requested column is allowed on orderable column
-
-
-//                        check order direction
-                        if (isset($direction[$key])) {
-                            $direction = $direction[$key];
-                            if ($direction != "ASC" && $direction != "DESC") {
-                                $direction = "ASC";
-                            }
-                        } else {
-                            $direction = "ASC";
-                        }
-
-                        $this->model = $this->model->orderBy($column, $direction);
-                    }
-                }
-            }
-        } else {
-//            when param is not empty
-            $this->model = $this->model->orderBy($columns, $direction);
-        }
         return $this;
     }
 }
