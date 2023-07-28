@@ -52,8 +52,8 @@ trait RepositoryFilter
             $intersectedFilter = array_intersect_key($requestQueryParam["filter"], $filterableColumns);
             // looping for every column on relation
             foreach ($intersectedFilter as $requestedKey => $requestValue) {
-                $dbOperator = $this->getDbOperator($requestedKey,$filterableColumns);
-                $dbColumnName = $this->getDbColumnName($requestedKey, $filterableColumns);
+                $dbOperator = $this->getDBOperator($requestedKey,$filterableColumns);
+                $dbColumnName = $this->getDBColumn($requestedKey, $filterableColumns);
 
                 if (is_string($requestValue)) {
                     $this->checkLikeOperator($dbOperator, $requestValue);
@@ -93,8 +93,8 @@ trait RepositoryFilter
         // filter column for main model
         $intersectedFilter = array_intersect_key($filterRequest, $filterableColumns);
         foreach ($intersectedFilter as $requestedKey => $value) {
-            $dbOperator = $this->getDbOperator($requestedKey,$filterableColumns);
-            $dbColumnName = $this->getDbColumnName($requestedKey, $filterableColumns);
+            $dbOperator = $this->getDBOperator($requestedKey,$filterableColumns);
+            $dbColumnName = $this->getDBColumn($requestedKey, $filterableColumns);
 
 
             // which mean the request value is only 1
@@ -130,7 +130,7 @@ trait RepositoryFilter
      * @param array $filterableColumns
      * @return string
      */
-    private function getDbOperator(string $requestedKey, array $filterableColumns):string{
+    private function getDBOperator(string $requestedKey, array $filterableColumns):string{
         $dbOperator = self::$defaultOperator;
         if (isset($filterableColumns[$requestedKey]["operator"])) {
             $dbOperator = $filterableColumns[$requestedKey]["operator"];
@@ -144,7 +144,7 @@ trait RepositoryFilter
      * @param array $filterableColumns
      * @return string
      */
-    private function getDbColumnName(string $requestedKey, array $filterableColumns):string{
+    private function getDBColumn(string $requestedKey, array $filterableColumns):string{
         /**
          * this is for $filterableColumns = [
          *  "name" => "users.name"
