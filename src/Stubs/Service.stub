@@ -1,0 +1,14 @@
+<?php
+
+namespace $NAMESPACE$;
+use Iqbalatma\LaravelServiceRepo\BaseService;
+
+class $CLASS_NAME$ extends BaseService
+{
+    protected $repository;
+
+    public function __construct()
+    {
+        // $this->repository
+    }
+}

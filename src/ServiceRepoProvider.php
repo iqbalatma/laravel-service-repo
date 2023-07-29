@@ -3,6 +3,7 @@
 namespace Iqbalatma\LaravelServiceRepo;
 
 use Illuminate\Support\ServiceProvider;
+use Iqbalatma\LaravelServiceRepo\Commands\GenerateServiceCommand;
 
 class ServiceRepoProvider extends ServiceProvider
 {
@@ -19,6 +20,12 @@ class ServiceRepoProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if($this->app->runningInConsole()){
+            $this->commands([
+                GenerateServiceCommand::class
+            ]);
+        }
+
         $this->publishes([
             __DIR__.'/config/servicerepo.php' => config_path('servicerepo.php'),
         ]);
