@@ -3,6 +3,7 @@
 namespace Iqbalatma\LaravelServiceRepo;
 
 use Illuminate\Support\ServiceProvider;
+use Iqbalatma\LaravelServiceRepo\Commands\GenerateRepositoryCommand;
 use Iqbalatma\LaravelServiceRepo\Commands\GenerateServiceCommand;
 
 class ServiceRepoProvider extends ServiceProvider
@@ -22,7 +23,8 @@ class ServiceRepoProvider extends ServiceProvider
     {
         if($this->app->runningInConsole()){
             $this->commands([
-                GenerateServiceCommand::class
+                GenerateServiceCommand::class,
+                GenerateRepositoryCommand::class,
             ]);
         }
 
