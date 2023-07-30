@@ -66,7 +66,7 @@ class GenerateServiceCommand extends Command
         }
 
         return [
-            'NAMESPACE' => 'App\\Services' . $namespace,
+            'NAMESPACE' => ucwords(str_replace("/", "\\", config("servicerepo.target_service_dir", "app/Services"))) . $namespace,
             'CLASS_NAME' => end($explodedClassName)
         ];
     }
@@ -103,7 +103,7 @@ class GenerateServiceCommand extends Command
     private function setTargetFilePath(): self
     {
         $className = $this->singularClassName;
-        $this->targetPath = base_path('app/Services') . "/$className.php";
+        $this->targetPath = base_path( config("servicerepo.target_service_dir","app/Services")) . "/$className.php";
 
         return $this;
     }
