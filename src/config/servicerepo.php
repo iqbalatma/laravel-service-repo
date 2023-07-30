@@ -9,5 +9,11 @@ return [
     | per page is 10
     |
     */
-    "perpage" => 15
+    "perpage" => 15,
+
+
+    "model_root_namespace" => "App\\Models",
+
+
+    "target_repository_dir" => "app/Repositories"
 ];

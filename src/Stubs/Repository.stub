@@ -2,6 +2,7 @@
 
 namespace *NAMESPACE*;
 use Iqbalatma\LaravelServiceRepo\BaseRepository;
+use *MODEL_NAMESPACE*;
 
 class *CLASS_NAME* extends BaseRepository
 {
@@ -9,6 +10,6 @@ class *CLASS_NAME* extends BaseRepository
 
     public function __construct()
     {
-        // $this->model
+        $this->model = new *MODEL_NAME*();
     }
 }

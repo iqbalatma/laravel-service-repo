@@ -8,7 +8,7 @@ use Illuminate\Support\Pluralizer;
 
 class GenerateRepositoryCommand extends Command
 {
-    protected $signature = "make:repository {name : service filename}";
+    protected $signature = "make:repository {name : service filename} {--M|model=}";
 
     protected $description = "Generate new repository";
     protected const STUB_PATH = __DIR__ . '/../Stubs/Repository.stub';
@@ -16,6 +16,7 @@ class GenerateRepositoryCommand extends Command
     protected Filesystem $files;
     protected string $targetPath;
     protected string $singularClassName;
+    protected string $modelName;
 
     /**
      * @param Filesystem $files
@@ -33,6 +34,7 @@ class GenerateRepositoryCommand extends Command
     public function handle(): void
     {
         $this->setSingularClassName()
+            ->setModelName()
             ->setTargetFilePath()
             ->makeDirectory();
 
@@ -42,6 +44,19 @@ class GenerateRepositoryCommand extends Command
         } else {
             $this->warn("File : {$this->targetPath} already exits"); // condition when file already exists
         }
+    }
+
+
+    /**
+     * @return self
+     */
+    private function setModelName(): self
+    {
+        $this->modelName = is_null($this->option("model")) ?
+            str_replace("Repository", "", $this->argument("name")) :
+            $this->option("model");
+
+        return $this;
     }
 
 
@@ -63,9 +78,13 @@ class GenerateRepositoryCommand extends Command
             $namespace = "\\" . implode("\\", $explodedNamespace);
         }
 
+        $explodedModelName = explode("/", $this->modelName);
+
         return [
-            'NAMESPACE' => 'App\\Repositories' . $namespace,
-            'CLASS_NAME' => end($explodedClassName)
+            'NAMESPACE' => ucwords(str_replace("/", "\\", config("servicerepo.target_repository_dir", "app/Repositories"))) . $namespace,
+            'MODEL_NAMESPACE' => config("servicerepo.model_root_namespace", "App\\Models") . "\\" . str_replace("/", "\\", $this->modelName),
+            'CLASS_NAME' => end($explodedClassName),
+            'MODEL_NAME' => end($explodedModelName),
         ];
     }
 
@@ -100,7 +119,7 @@ class GenerateRepositoryCommand extends Command
     private function setTargetFilePath(): self
     {
         $className = $this->singularClassName;
-        $this->targetPath = base_path('app/Repositories') . "/$className.php";
+        $this->targetPath = base_path(config("servicerepo.target_repository_dir", "app/Repositories")) . "/$className.php";
 
         return $this;
     }
