@@ -40,6 +40,4 @@ return [
     |
     */
     "target_service_dir" => "app/Services",
-
-
 ];
