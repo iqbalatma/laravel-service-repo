@@ -18,7 +18,6 @@ trait RepositoryFilter
      */
     public function filterColumn(array $filterableColumns = [], array $relationFilterableColumns = []): BaseRepository
     {
-        $requestQueryParam = request()->query();
         $this->setRequestQueryParam()
             ->setFilterableColumns($filterableColumns)
             ->setRelationFilterableColumns($relationFilterableColumns);
