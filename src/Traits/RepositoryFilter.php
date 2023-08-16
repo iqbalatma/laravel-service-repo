@@ -7,21 +7,26 @@ use Iqbalatma\LaravelServiceRepo\BaseRepository;
 trait RepositoryFilter
 {
     private static string $defaultOperator = "=";
+    private array $requestQueryParam;
+    private array $filterableColumns;
+    private array $relationFilterableColumns;
 
     /**
-     * if the same column value is array, it will iterate it, and use or where clause
-     *
      * @param array $filterableColumns
+     * @param array $relationFilterableColumns
      * @return BaseRepository
      */
     public function filterColumn(array $filterableColumns = [], array $relationFilterableColumns = []): BaseRepository
     {
         $requestQueryParam = request()->query();
+        $this->setRequestQueryParam()
+            ->setFilterableColumns($filterableColumns)
+            ->setRelationFilterableColumns($relationFilterableColumns);
 
 
-        if ($this->isFilterRequestExists($requestQueryParam)) {
-            $this->filterMainModel($requestQueryParam, $filterableColumns)
-                ->filterRelationModel($requestQueryParam, $relationFilterableColumns);
+        if ($this->isFilterRequestExists()) {
+            $this->filterMainModel()
+                ->filterRelationModel();
         };
 
         return $this;
@@ -35,31 +40,32 @@ trait RepositoryFilter
      * @param string $value
      * @return void
      */
-    private function checkLikeOperator(string $operator, string &$value)
+    private function checkLikeOperator(string $operator, string &$value):void
     {
         if (strtolower($operator) === "like") $value = "%$value%";
 
     }
 
     /**
-     * @param array $requestQueryParam
-     * @param array $relationFilterableColumns
      * @return void
      */
-    private function filterRelationModel(array $requestQueryParam, array $relationFilterableColumns):void{
+    private function filterRelationModel():void{
         // looping for every relation
-        foreach ($relationFilterableColumns as $relationName => $filterableColumns) {
-            $intersectedFilter = array_intersect_key($requestQueryParam["filter"], $filterableColumns);
+        foreach ($this->relationFilterableColumns as $relationName => $filterableColumns) {
+
+            $intersectedFilter = array_intersect_key($this->requestQueryParam["filter"], $filterableColumns);
+
             // looping for every column on relation
             foreach ($intersectedFilter as $requestedKey => $requestValue) {
-                $dbOperator = $this->getDBOperator($requestedKey,$filterableColumns);
-                $dbColumnName = $this->getDBColumn($requestedKey, $filterableColumns);
+                $dbOperator = $this->getDBOperator($requestedKey);
+                $dbColumnName = $this->getRelationDBColumn($relationName, $requestedKey);
+
 
                 if (is_string($requestValue)) {
                     $this->checkLikeOperator($dbOperator, $requestValue);
 
-                    $this->model = $this->model->whereHas($relationName, function ($query) use ($dbColumnName, $dbOperator, $requestValue) {
-                        $query->where($dbColumnName, $dbOperator, $requestValue);
+                    $this->model->whereHas($relationName, function ($subQuery) use ($dbColumnName, $dbOperator, $requestValue) {
+                        $subQuery->where($dbColumnName, $dbOperator, $requestValue);
                     });
                 }
 
@@ -72,42 +78,36 @@ trait RepositoryFilter
                         $count = count($requestValue);
                     }
 
-                    $this->model = $this->model->whereHas($relationName, function ($query) use ($requestValue, $dbColumnName) {
-                        $query->whereIn($dbColumnName, $requestValue);
+                    $this->model->whereHas($relationName, function ($subQuery) use ($requestValue, $dbColumnName) {
+                        $subQuery->whereIn($dbColumnName, $requestValue);
                     }, $dbOperator, $count);
                 }
             }
         }
-
     }
 
     /**
-     * use to filter main repository model
-     * @param array $requestQueryParam
-     * @param array $filterableColumns
-     * @return self
+     * @return RepositoryFilter|BaseRepository
      */
-    private function filterMainModel(array $requestQueryParam, array $filterableColumns):self
+    private function filterMainModel():self
     {
-        $filterRequest = $requestQueryParam["filter"];
         // filter column for main model
-        $intersectedFilter = array_intersect_key($filterRequest, $filterableColumns);
-        foreach ($intersectedFilter as $requestedKey => $value) {
-            $dbOperator = $this->getDBOperator($requestedKey,$filterableColumns);
-            $dbColumnName = $this->getDBColumn($requestedKey, $filterableColumns);
+        foreach (array_intersect_key($this->requestQueryParam["filter"], $this->filterableColumns) as $requestedKey => $value) {
 
+            $dbOperator = $this->getDBOperator($requestedKey);
+            $dbColumnName = $this->getDBColumn($requestedKey);
 
             // which mean the request value is only 1
             if (is_string($value)) {
                 $this->checkLikeOperator($dbOperator, $value);
-                $this->model = $this->model->where($dbColumnName, $dbOperator, $value);
+                $this->model->where($dbColumnName, $dbOperator, $value);
             }
 
             // which mean the request value is more than one
             if (is_array($value)) {
                 foreach ($value as $subValue) {
                     $this->checkLikeOperator($dbColumnName, $subValue);
-                    $this->model = $this->model->orWhere($dbColumnName, $dbOperator, $subValue);
+                    $this->model->orWhere($dbColumnName, $dbOperator, $subValue);
                 }
             }
         }
@@ -117,20 +117,20 @@ trait RepositoryFilter
 
 
     /**
-     * @param array $requestQueryParam
      * @return bool
      */
-    private function isFilterRequestExists(array $requestQueryParam):bool{
-        return isset($requestQueryParam["filter"]) && is_array($requestQueryParam["filter"]);
+    private function isFilterRequestExists():bool{
+        return isset($this->requestQueryParam["filter"]) && is_array($this->requestQueryParam["filter"]);
     }
 
 
     /**
      * @param string $requestedKey
-     * @param array $filterableColumns
      * @return string
      */
-    private function getDBOperator(string $requestedKey, array $filterableColumns):string{
+    private function getDBOperator(string $requestedKey): string
+    {
+        $filterableColumns = $this->filterableColumns;
         $dbOperator = self::$defaultOperator;
         if (isset($filterableColumns[$requestedKey]["operator"])) {
             $dbOperator = $filterableColumns[$requestedKey]["operator"];
@@ -138,13 +138,9 @@ trait RepositoryFilter
         return $dbOperator;
     }
 
+    private function getRelationDBColumn(string $relationName, string $requestedKey): string
+    {
 
-    /**
-     * @param string $requestedKey
-     * @param array $filterableColumns
-     * @return string
-     */
-    private function getDBColumn(string $requestedKey, array $filterableColumns):string{
         /**
          * this is for $filterableColumns = [
          *  "name" => "users.name"
@@ -152,7 +148,7 @@ trait RepositoryFilter
          *
          * which mean that the value is string
          */
-        $dbColumnName = $filterableColumns[$requestedKey];
+        $dbColumnName = $this->relationFilterableColumns[$relationName][$requestedKey];
 
         /**
          * this is case when developer want to custom operator (not using default operator '=')
@@ -170,4 +166,69 @@ trait RepositoryFilter
         return $dbColumnName;
     }
 
+
+    /**
+     * @param string $requestedKey
+     * @return string
+     */
+    private function getDBColumn(string $requestedKey): string
+    {
+
+        /**
+         * this is for $filterableColumns = [
+         *  "name" => "users.name"
+         * ]
+         *
+         * which mean that the value is string
+         */
+        $dbColumnName = $this->filterableColumns[$requestedKey];
+
+        /**
+         * this is case when developer want to custom operator (not using default operator '=')
+         * this is for $filterableColumns = [
+         *      "name" => [
+         *          "column" => "users.name",
+         *          "operator" => "like" // could be = >= > < <= !=
+         *      ]
+         * ]
+         */
+        if (isset($dbColumnName["column"])) {
+            $dbColumnName = $dbColumnName["column"];
+        }
+
+        return $dbColumnName;
+    }
+
+
+    /**
+     * @return RepositoryFilter|BaseRepository
+     */
+    private function setRequestQueryParam(): self
+    {
+        $this->requestQueryParam = request()->query();
+
+        return $this;
+    }
+
+    /**
+     * @param array $filterableColumn
+     * @return RepositoryFilter|BaseRepository
+     */
+    private function setFilterableColumns(array $filterableColumn): self
+    {
+        $this->filterableColumns = $filterableColumn;
+
+        return $this;
+    }
+
+    /**
+     * @param array $relationFilterableColumns
+     * @return RepositoryFilter|BaseRepository
+     */
+    private function setRelationFilterableColumns(array $relationFilterableColumns): self
+    {
+        $this->relationFilterableColumns = $relationFilterableColumns;
+
+        return $this;
+    }
 }
