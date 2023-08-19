@@ -8,46 +8,45 @@ use Iqbalatma\LaravelServiceRepo\BaseRepository;
 trait RepositoryExtend
 {
     /**
-     * Use to add with relation on model
-     *
      * @param array|string $relations
-     * @return BaseRepository
+     * @return RepositoryExtend|BaseRepository
      */
     public function with(array|string $relations): self
     {
-        $this->model = $this->model->with($relations);
+        $this->query->with($relations);
         return $this;
     }
 
+
     /**
      * @param array|string $relations
-     * @return BaseRepository
+     * @return RepositoryExtend|BaseRepository
      */
     public function without(array|string $relations): self
     {
-        $this->model = $this->model->without($relations);
+        $this->query->without($relations);
         return $this;
     }
 
     /**
      * @param array|string $relation
      * @param string $column
-     * @return BaseRepository
+     * @return RepositoryExtend|BaseRepository
      */
     public function withAvg(array|string $relation, string $column): self
     {
-        $this->model = $this->model->withAvg($relation, $column);
+        $this->query->withAvg($relation, $column);
         return $this;
     }
 
 
     /**
      * @param mixed $relations
-     * @return BaseRepository
+     * @return RepositoryExtend|BaseRepository
      */
     public function withCount(mixed $relations): self
     {
-        $this->model = $this->model->withCount($relations);
+        $this->query->withCount($relations);
         return $this;
     }
 
@@ -55,22 +54,23 @@ trait RepositoryExtend
     /**
      * @param array|string $relation
      * @param string $column
-     * @return BaseRepository
+     * @return RepositoryExtend|BaseRepository
      */
     public function withMin(array|string $relation, string $column): self
     {
-        $this->model = $this->model->withMin($relation, $column);
+        $this->query->withMin($relation, $column);
         return $this;
     }
+
 
     /**
      * @param array|string $relation
      * @param string $column
-     * @return BaseRepository
+     * @return RepositoryExtend|BaseRepository
      */
     public function withMax(array|string $relation, string $column): self
     {
-        $this->model = $this->model->withMax($relation, $column);
+        $this->query->withMax($relation, $column);
         return $this;
     }
 
@@ -78,11 +78,11 @@ trait RepositoryExtend
     /**
      * @param array|string $relation
      * @param string $column
-     * @return BaseRepository
+     * @return RepositoryExtend|BaseRepository
      */
     public function withSum(array|string $relation, string $column): self
     {
-        $this->model = $this->model->withSum($relation, $column);
+        $this->query->withSum($relation, $column);
         return $this;
     }
 
@@ -92,11 +92,11 @@ trait RepositoryExtend
      * @param int $count
      * @param string $boolean
      * @param \Closure|null $callback
-     * @return BaseRepository
+     * @return RepositoryExtend|BaseRepository
      */
     public function has(Relation|string $relation, string $operator = '>=', int $count = 1, string $boolean = 'and', \Closure|null $callback = null): self
     {
-        $this->model = $this->model->has($relation, $operator, $count, $boolean, $callback);
+        $this->query->has($relation, $operator, $count, $boolean, $callback);
         return $this;
     }
 
@@ -106,24 +106,25 @@ trait RepositoryExtend
      * @param \Closure|null $callback
      * @param string $operator
      * @param int $count
-     * @return BaseRepository
+     * @return RepositoryExtend|BaseRepository
      */
     public function whereHas(string $relation, \Closure|null $callback = null, string $operator = '>=', int $count = 1): self
     {
-        $this->model = $this->model->whereHas($relation, $callback, $operator, $count);
+        $this->query->whereHas($relation, $callback, $operator, $count);
         return $this;
     }
+
 
     /**
      * @param string $relation
      * @param \Closure|null $callback
      * @param string $operator
      * @param int $count
-     * @return BaseRepository
+     * @return RepositoryExtend|BaseRepository
      */
     public function orWhereHas(string $relation, \Closure|null $callback = null, string $operator = '>=', int $count = 1): self
     {
-        $this->model = $this->model->orWhereHas($relation, $callback, $operator, $count);
+        $this->query->orWhereHas($relation, $callback, $operator, $count);
         return $this;
     }
 
@@ -133,11 +134,11 @@ trait RepositoryExtend
      * @param string|null $operator
      * @param string|null $value
      * @param string|null $boolean
-     * @return BaseRepository
+     * @return RepositoryExtend|BaseRepository
      */
     public function where(array|string $column, ?string $operator = null, ?string $value = null, ?string $boolean = 'and'): self
     {
-        $this->model = $this->model->where($column, $operator, $value, $boolean);
+        $this->query->where($column, $operator, $value, $boolean);
         return $this;
     }
 
@@ -146,24 +147,25 @@ trait RepositoryExtend
      * @param array|string $column
      * @param string|null $operator
      * @param string|null $value
-     * @return BaseRepository
+     * @return RepositoryExtend|BaseRepository
      */
     public function orWhere(array|string $column, ?string $operator = null, ?string $value = null): self
     {
-        $this->model = $this->model->orWhere($column, $operator, $value);
+        $this->query->orWhere($column, $operator, $value);
         return $this;
     }
+
 
     /**
      * @param array|string $column
      * @param string|null $operator
      * @param string|null $value
      * @param string|null $boolean
-     * @return BaseRepository
+     * @return RepositoryExtend|BaseRepository
      */
     public function whereNot(array|string $column, ?string $operator = null, ?string $value = null, ?string $boolean = 'and'): self
     {
-        $this->model = $this->model->whereNot($column, $operator, $value, $boolean);
+        $this->query->whereNot($column, $operator, $value, $boolean);
         return $this;
     }
 
@@ -173,37 +175,37 @@ trait RepositoryExtend
      * @param array $values
      * @param string $boolean
      * @param bool $not
-     * @return BaseRepository
+     * @return RepositoryExtend|BaseRepository
      */
     public function whereBetween(string $column, array $values, string $boolean = 'and', bool $not = false): self
     {
-        $this->model = $this->model->whereBetween($column, $values, $boolean, $not);
+        $this->query->whereBetween($column, $values, $boolean, $not);
         return $this;
     }
 
-
-    /**
-     * @param string $column
-     * @param string|array $values
-     * @param string $boolean
-     * @return BaseRepository
-     */
-    public function whereNotBetween(string $column, array|string $values, string $boolean = 'and'): self
-    {
-        $this->model = $this->model->whereNotBetween($column, $values, $boolean);
-        return $this;
-    }
 
     /**
      * @param string $column
      * @param array|string $values
      * @param string $boolean
+     * @return RepositoryExtend|BaseRepository
+     */
+    public function whereNotBetween(string $column, array|string $values, string $boolean = 'and'): self
+    {
+        $this->query->whereNotBetween($column, $values, $boolean);
+        return $this;
+    }
+
+    /**
+     * @param string $column
+     * @param array $values
+     * @param string $boolean
      * @param bool $not
-     * @return BaseRepository
+     * @return RepositoryExtend|BaseRepository
      */
     public function whereBetweenColumns(string $column, array $values, string $boolean = 'and', bool $not = false): self
     {
-        $this->model = $this->model->whereBetweenColumns($column, $values, $boolean, $not);
+        $this->query->whereBetweenColumns($column, $values, $boolean, $not);
         return $this;
     }
 
@@ -212,11 +214,11 @@ trait RepositoryExtend
      * @param string $column
      * @param array $values
      * @param string $boolean
-     * @return BaseRepository
+     * @return RepositoryExtend|BaseRepository
      */
     public function whereNotBetweenColumns(string $column, array $values, string $boolean = 'and'): self
     {
-        $this->model = $this->model->whereNotBetweenColumns($column, $values, $boolean);
+        $this->query->whereNotBetweenColumns($column, $values, $boolean);
         return $this;
     }
 
@@ -225,11 +227,11 @@ trait RepositoryExtend
      * @param array $values
      * @param string $boolean
      * @param bool $not
-     * @return BaseRepository
+     * @return RepositoryExtend|BaseRepository
      */
     public function whereIn(string $column, array $values, string $boolean = 'and', bool $not = false): self
     {
-        $this->model = $this->model->whereIn($column, $values, $boolean, $not);
+        $this->query->whereIn($column, $values, $boolean, $not);
         return $this;
     }
 
@@ -237,24 +239,23 @@ trait RepositoryExtend
      * @param string $column
      * @param array $values
      * @param string $boolean
-     * @return BaseRepository
+     * @return RepositoryExtend|BaseRepository
      */
     public function whereNotIn(string $column, array $values, string $boolean = 'and'): self
     {
-        $this->model = $this->model->whereNotIn($column, $values, $boolean);
+        $this->query->whereNotIn($column, $values, $boolean);
         return $this;
     }
-
 
     /**
      * @param array|string $columns
      * @param string $boolean
      * @param bool $not
-     * @return BaseRepository
+     * @return RepositoryExtend|BaseRepository
      */
     public function whereNull(array|string $columns, string $boolean = 'and', bool $not = false): self
     {
-        $this->model = $this->model->whereNull($columns, $boolean, $not);
+        $this->query->whereNull($columns, $boolean, $not);
         return $this;
     }
 
@@ -262,11 +263,11 @@ trait RepositoryExtend
     /**
      * @param string|array $columns
      * @param string $boolean
-     * @return BaseRepository
+     * @return RepositoryExtend|BaseRepository
      */
     public function whereNotNull(string|array $columns, string $boolean = 'and'): self
     {
-        $this->model = $this->model->whereNotNull($columns, $boolean);
+        $this->query->whereNotNull($columns, $boolean);
         return $this;
     }
 
@@ -276,11 +277,11 @@ trait RepositoryExtend
      * @param string $operator
      * @param \DateTimeInterface|string|null $value
      * @param string $boolean
-     * @return BaseRepository
+     * @return RepositoryExtend|BaseRepository
      */
     public function whereDate(string $column, string $operator, \DateTimeInterface|string|null $value = null, string $boolean = 'and'): self
     {
-        $this->model = $this->model->whereDate($column, $operator, $value, $boolean);
+        $this->query->whereDate($column, $operator, $value, $boolean);
         return $this;
     }
 
@@ -290,11 +291,11 @@ trait RepositoryExtend
      * @param string $operator
      * @param \DateTimeInterface|string|null $value
      * @param string $boolean
-     * @return BaseRepository
+     * @return RepositoryExtend|BaseRepository
      */
     public function whereMonth(string $column, string $operator, \DateTimeInterface|string|null $value = null, string $boolean = 'and'): self
     {
-        $this->model = $this->model->whereMonth($column, $operator, $value, $boolean);
+        $this->query->whereMonth($column, $operator, $value, $boolean);
         return $this;
     }
 
@@ -303,11 +304,11 @@ trait RepositoryExtend
      * @param string $operator
      * @param \DateTimeInterface|string|null $value
      * @param string $boolean
-     * @return BaseRepository
+     * @return RepositoryExtend|BaseRepository
      */
     public function whereDay(string $column, string $operator, \DateTimeInterface|string|null $value = null, string $boolean = 'and'): self
     {
-        $this->model = $this->model->whereDay($column, $operator, $value, $boolean);
+        $this->query->whereDay($column, $operator, $value, $boolean);
         return $this;
     }
 
@@ -317,11 +318,11 @@ trait RepositoryExtend
      * @param string $operator
      * @param \DateTimeInterface|string|null $value
      * @param string $boolean
-     * @return BaseRepository
+     * @return RepositoryExtend|BaseRepository
      */
     public function whereYear(string $column, string $operator, \DateTimeInterface|string|null $value = null, string $boolean = 'and'): self
     {
-        $this->model = $this->model->whereYear($column, $operator, $value, $boolean);
+        $this->query->whereYear($column, $operator, $value, $boolean);
         return $this;
     }
 
@@ -331,24 +332,25 @@ trait RepositoryExtend
      * @param string $operator
      * @param \DateTimeInterface|string|null $value
      * @param string $boolean
-     * @return BaseRepository
+     * @return RepositoryExtend|BaseRepository
      */
     public function whereTime(string $column, string $operator, \DateTimeInterface|string|null $value = null, string $boolean = 'and'): self
     {
-        $this->model = $this->model->whereTime($column, $operator, $value, $boolean);
+        $this->query->whereTime($column, $operator, $value, $boolean);
         return $this;
     }
+
 
     /**
      * @param array|string $first
      * @param string|null $operator
      * @param string|null $second
      * @param string|null $boolean
-     * @return BaseRepository
+     * @return RepositoryExtend|BaseRepository
      */
     public function whereColumn(array|string $first, ?string $operator = null, ?string $second = null, ?string $boolean = 'and'): self
     {
-        $this->model = $this->model->whereColumn($first, $operator, $second, $boolean);
+        $this->query->whereColumn($first, $operator, $second, $boolean);
         return $this;
     }
 
@@ -356,11 +358,11 @@ trait RepositoryExtend
      * @param array|string $first
      * @param string|null $operator
      * @param string|null $second
-     * @return BaseRepository
+     * @return RepositoryExtend|BaseRepository
      */
     public function orWhereColumn(array|string $first, ?string $operator = null, ?string $second = null): self
     {
-        $this->model = $this->model->orWhereColumn($first, $operator, $second);
+        $this->query = $this->query->orWhereColumn($first, $operator, $second);
         return $this;
     }
 }
