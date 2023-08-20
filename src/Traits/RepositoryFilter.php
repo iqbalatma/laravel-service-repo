@@ -12,11 +12,11 @@ trait RepositoryFilter
     private array $relationFilterableColumns;
 
     /**
-     * @param array $filterableColumns
-     * @param array $relationFilterableColumns
+     * @param null|array $filterableColumns
+     * @param null|array $relationFilterableColumns
      * @return BaseRepository
      */
-    public function filterColumn(array $filterableColumns = [], array $relationFilterableColumns = []): BaseRepository
+    public function filterColumn(?array $filterableColumns = null, ?array $relationFilterableColumns = null): BaseRepository
     {
         $this->setRequestQueryParam()
             ->setFilterableColumns($filterableColumns)
@@ -217,23 +217,28 @@ trait RepositoryFilter
     }
 
     /**
-     * @param array $filterableColumn
+     * @param array|null $filterableColumn
      * @return RepositoryFilter|BaseRepository
      */
-    private function setFilterableColumns(array $filterableColumn): self
+    private function setFilterableColumns(?array $filterableColumn): self
     {
-        $this->filterableColumns = $filterableColumn;
+        /**
+         * this will get filterable columns from param if not null
+         * if null, it will get from model property
+         * if null as well, it will set to empty array as default
+         */
+        $this->filterableColumns = $filterableColumn ?? $this->query->getModel()->filterableColumns ?? [];
 
         return $this;
     }
 
     /**
-     * @param array $relationFilterableColumns
+     * @param null|array $relationFilterableColumns
      * @return RepositoryFilter|BaseRepository
      */
-    private function setRelationFilterableColumns(array $relationFilterableColumns): self
+    private function setRelationFilterableColumns(?array $relationFilterableColumns): self
     {
-        $this->relationFilterableColumns = $relationFilterableColumns;
+        $this->relationFilterableColumns = $relationFilterableColumns ?? $this->query->getModel()->relationFilterableColumns ?? [];
 
         return $this;
     }
