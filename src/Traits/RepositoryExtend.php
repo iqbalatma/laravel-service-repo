@@ -362,7 +362,7 @@ trait RepositoryExtend
      */
     public function orWhereColumn(array|string $first, ?string $operator = null, ?string $second = null): self
     {
-        $this->query = $this->query->orWhereColumn($first, $operator, $second);
+        $this->query->orWhereColumn($first, $operator, $second);
         return $this;
     }
 }

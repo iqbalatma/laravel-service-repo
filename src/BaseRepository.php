@@ -20,7 +20,7 @@ abstract class BaseRepository implements RepositoryInterface
     /**
      * @return self
      */
-    public static function init(): self
+    public static function build(): self
     {
         $class = get_called_class();
         return new $class;
