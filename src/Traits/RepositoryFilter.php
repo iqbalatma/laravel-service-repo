@@ -39,7 +39,7 @@ trait RepositoryFilter
      * @param string $value
      * @return void
      */
-    private function checkLikeOperator(string $operator, string &$value):void
+    private function checkLikeOperator(string $operator, string &$value): void
     {
         if (strtolower($operator) === "like") $value = "%$value%";
 
@@ -48,7 +48,8 @@ trait RepositoryFilter
     /**
      * @return void
      */
-    private function filterRelationModel():void{
+    private function filterRelationModel(): void
+    {
         // looping for every relation
         foreach ($this->relationFilterableColumns as $relationName => $filterableColumns) {
 
@@ -63,7 +64,7 @@ trait RepositoryFilter
                 if (is_string($requestValue)) {
                     $this->checkLikeOperator($dbOperator, $requestValue);
 
-                    $this->model->whereHas($relationName, function ($subQuery) use ($dbColumnName, $dbOperator, $requestValue) {
+                    $this->query->whereHas($relationName, function ($subQuery) use ($dbColumnName, $dbOperator, $requestValue) {
                         $subQuery->where($dbColumnName, $dbOperator, $requestValue);
                     });
                 }
@@ -77,7 +78,7 @@ trait RepositoryFilter
                         $count = count($requestValue);
                     }
 
-                    $this->model->whereHas($relationName, function ($subQuery) use ($requestValue, $dbColumnName) {
+                    $this->query->whereHas($relationName, function ($subQuery) use ($requestValue, $dbColumnName) {
                         $subQuery->whereIn($dbColumnName, $requestValue);
                     }, $dbOperator, $count);
                 }
@@ -88,7 +89,7 @@ trait RepositoryFilter
     /**
      * @return RepositoryFilter|BaseRepository
      */
-    private function filterMainModel():self
+    private function filterMainModel(): self
     {
         // filter column for main model
         foreach (array_intersect_key($this->requestQueryParam["filter"], $this->filterableColumns) as $requestedKey => $value) {
@@ -99,14 +100,14 @@ trait RepositoryFilter
             // which mean the request value is only 1
             if (is_string($value)) {
                 $this->checkLikeOperator($dbOperator, $value);
-                $this->model->where($dbColumnName, $dbOperator, $value);
+                $this->query->where($dbColumnName, $dbOperator, $value);
             }
 
             // which mean the request value is more than one
             if (is_array($value)) {
                 foreach ($value as $subValue) {
                     $this->checkLikeOperator($dbColumnName, $subValue);
-                    $this->model->orWhere($dbColumnName, $dbOperator, $subValue);
+                    $this->query->orWhere($dbColumnName, $dbOperator, $subValue);
                 }
             }
         }
@@ -118,7 +119,8 @@ trait RepositoryFilter
     /**
      * @return bool
      */
-    private function isFilterRequestExists():bool{
+    private function isFilterRequestExists(): bool
+    {
         return isset($this->requestQueryParam["filter"]) && is_array($this->requestQueryParam["filter"]);
     }
 
@@ -137,6 +139,11 @@ trait RepositoryFilter
         return $dbOperator;
     }
 
+    /**
+     * @param string $relationName
+     * @param string $requestedKey
+     * @return string
+     */
     private function getRelationDBColumn(string $relationName, string $requestedKey): string
     {
 
