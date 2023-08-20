@@ -3,14 +3,13 @@
 namespace Iqbalatma\LaravelServiceRepo;
 
 use Illuminate\Database\Eloquent\Model;
-use Iqbalatma\LaravelServiceRepo\Contracts\Interfaces\RepositoryInterface;
 use Iqbalatma\LaravelServiceRepo\Contracts\Interfaces\ServiceInterface;
 use Iqbalatma\LaravelServiceRepo\Exceptions\EmptyDataException;
 
 abstract class BaseService implements ServiceInterface
 {
     /**
-     * @var RepositoryInterface $repository
+     * @var BaseRepository $repository
      */
     protected $repository;
 
