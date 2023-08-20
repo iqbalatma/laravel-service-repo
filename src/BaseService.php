@@ -3,13 +3,14 @@
 namespace Iqbalatma\LaravelServiceRepo;
 
 use Illuminate\Database\Eloquent\Model;
+use Iqbalatma\LaravelServiceRepo\Contracts\Interfaces\RepositoryInterface;
 use Iqbalatma\LaravelServiceRepo\Contracts\Interfaces\ServiceInterface;
 use Iqbalatma\LaravelServiceRepo\Exceptions\EmptyDataException;
 
 abstract class BaseService implements ServiceInterface
 {
     /**
-     * @var BaseRepository $repository
+     * @var RepositoryInterface $repository
      */
     protected $repository;
 
@@ -48,9 +49,9 @@ abstract class BaseService implements ServiceInterface
      * @return void
      * @throws EmptyDataException
      */
-    public function isExists(mixed $data):void
+    public function isExists(mixed $data): void
     {
-        if($data?->count()==0 || !$data){
+        if ($data?->count() == 0 || !$data) {
             throw new EmptyDataException("Data doesn't exists !");
         }
     }
@@ -59,7 +60,7 @@ abstract class BaseService implements ServiceInterface
      * @param Model $serviceEntity
      * @return $this
      */
-    public function setServiceEntity(Model $serviceEntity):self
+    public function setServiceEntity(Model $serviceEntity): self
     {
         $this->serviceEntity = $serviceEntity;
         return $this;
@@ -69,7 +70,7 @@ abstract class BaseService implements ServiceInterface
     /**
      * @return Model
      */
-    public function getServiceEntity():Model
+    public function getServiceEntity(): Model
     {
         return $this->serviceEntity;
     }

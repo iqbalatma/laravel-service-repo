@@ -3,29 +3,32 @@
 namespace Iqbalatma\LaravelServiceRepo\Traits;
 
 
+use Iqbalatma\LaravelServiceRepo\BaseRepository;
+
 trait RepositoryOrder
 {
     /**
-     * @param array $orderaleColumns
-     * @param string|null $columns
-     * @param string|null $direction
-     * @return RepositoryOrder
+     * @param array|string $orderableColumns
+     * @param string $direction
+     * @return RepositoryOrder|BaseRepository
      */
-    public function orderBy(array $orderaleColumns = [], ?string $columns = null, ?string $direction = "ASC"): self
+    public function orderBy(array|string $orderableColumns = [], string $direction = "ASC"): self
     {
-        $requestQueryParam = request()->query();
-        if(is_null($columns)){
+        if (is_array($orderableColumns)) {
+            $requestQueryParam = request()->query();
             if ($this->isOrderRequestExists($requestQueryParam)) {
-                $columns = array_intersect_key($requestQueryParam["order"], $orderaleColumns);
+                $columns = array_intersect_key($requestQueryParam["order"], $orderableColumns);
 
                 foreach ($columns as $columnName => $requestDirection) {
                     $this->checkDirection($requestDirection);
-                    $this->model = $this->model->orderBy($columnName, $requestDirection);
+                    $this->query->orderBy($columnName, $requestDirection);
                 }
             }
-        }else{
+        }
+
+        if (is_string($orderableColumns)) {
             $this->checkDirection($direction);
-            $this->model = $this->model->orderBy($columns, $direction);
+            $this->query->orderBy($orderableColumns, $direction);
         }
         return $this;
     }
