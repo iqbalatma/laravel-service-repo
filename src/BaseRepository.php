@@ -59,6 +59,14 @@ abstract class BaseRepository implements RepositoryInterface
     }
 
     /**
+     * @return BaseRepository
+     */
+    public function init(): BaseRepository
+    {
+        return new static();
+    }
+
+    /**
      * use to implement custom filter param, call it on (for example RoleQuery) and override
      * @return void
      */
