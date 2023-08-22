@@ -61,7 +61,7 @@ abstract class BaseRepository implements RepositoryInterface
     /**
      * @return BaseRepository
      */
-    public function init(): BaseRepository
+    public static function init(): BaseRepository
     {
         return new static();
     }
