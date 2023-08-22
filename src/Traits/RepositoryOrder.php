@@ -3,17 +3,22 @@
 namespace Iqbalatma\LaravelServiceRepo\Traits;
 
 
-use Iqbalatma\LaravelServiceRepo\BaseRepository;
+use Illuminate\Database\Eloquent\Builder;
+use Iqbalatma\LaravelServiceRepo\BaseRepositoryExtend;
 
 trait RepositoryOrder
 {
     /**
-     * @param array|string $orderableColumns
+     * @param array|string|null $orderableColumns
      * @param string $direction
-     * @return RepositoryOrder|BaseRepository
+     * @return RepositoryOrder|BaseRepositoryExtend
      */
-    public function orderBy(array|string $orderableColumns = [], string $direction = "ASC"): self
+    public function _orderColumn(array|string|null $orderableColumns = null, string $direction = "ASC"): self
     {
+        $orderableColumns = $orderableColumns ?? $this->builder->getModel()->orderableColumns ?? [];
+        $this->defaultOrderColumn();
+
+
         if (is_array($orderableColumns)) {
             $requestQueryParam = request()->query();
             if ($this->isOrderRequestExists($requestQueryParam)) {
@@ -21,16 +26,27 @@ trait RepositoryOrder
 
                 foreach ($columns as $columnName => $requestDirection) {
                     $this->checkDirection($requestDirection);
-                    $this->query->orderBy($columnName, $requestDirection);
+                    $this->builder->orderBy($columnName, $requestDirection);
                 }
             }
         }
 
         if (is_string($orderableColumns)) {
             $this->checkDirection($direction);
-            $this->query->orderBy($orderableColumns, $direction);
+            $this->builder->orderBy($orderableColumns, $direction);
         }
         return $this;
+    }
+
+
+    /**
+     * @return void
+     */
+    private function defaultOrderColumn(): void
+    {
+        $this->builder->when(!empty(request()->query()["order"]["created_at"]), function (Builder $query) {
+            $query->orderBy("created_at", request()->query()["order"]["created_at"]);
+        });
     }
 
 
