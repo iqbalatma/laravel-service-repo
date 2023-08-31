@@ -2,14 +2,26 @@
 
 namespace *NAMESPACE*;
 use Iqbalatma\LaravelServiceRepo\BaseRepository;
-use *MODEL_NAMESPACE*;
+use Illuminate\Database\Eloquent\Builder;
+use App\Models\*MODEL_NAME*;
 
 class *CLASS_NAME* extends BaseRepository
 {
-    protected $model;
 
-    public function __construct()
+     /**
+     * use to set base query builder
+     * @return Builder
+     */
+    public function getBaseQuery(): Builder
     {
-        $this->model = new *MODEL_NAME*();
+        return *MODEL_NAME*::query();
+    }
+
+    /**
+     * use this to add custom query on filterColumn method
+     * @return void
+     */
+    public function applyAdditionalFilterParams(): void
+    {
     }
 }

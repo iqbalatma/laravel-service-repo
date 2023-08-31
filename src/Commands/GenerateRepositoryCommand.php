@@ -52,9 +52,7 @@ class GenerateRepositoryCommand extends Command
      */
     private function setModelName(): self
     {
-        $this->modelName = is_null($this->option("model")) ?
-            str_replace("Repository", "", $this->argument("name")) :
-            $this->option("model");
+        $this->modelName = $this->option("model") ?? str_replace("Repository", "", $this->argument("name"));
 
         return $this;
     }
@@ -111,7 +109,6 @@ class GenerateRepositoryCommand extends Command
         $this->singularClassName = ucwords(Pluralizer::singular($this->argument('name')));
         return $this;
     }
-
 
     /**
      * @return self
