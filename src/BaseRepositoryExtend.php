@@ -2,6 +2,8 @@
 
 namespace Iqbalatma\LaravelServiceRepo;
 
+use Closure;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -41,11 +43,6 @@ class BaseRepositoryExtend
         return $this->baseRepository;
     }
 
-    public function forwardScope($name, $arguments)
-    {
-        $this->builder->getModel()->$name($this->builder, ...$arguments);
-        return $this->baseRepository;
-    }
 
     /**
      * @param array|string|null $orderableColumns
@@ -57,6 +54,20 @@ class BaseRepositoryExtend
         $this->orderColumnTrait($orderableColumns, $direction);
         return $this->baseRepository;
     }
+
+
+    /**
+     * @note Use call method scope on model instance
+     * @param $name
+     * @param $arguments
+     * @return BaseRepository
+     */
+    public function forwardScope($name, $arguments):BaseRepository
+    {
+        $this->builder->getModel()->$name($this->builder, ...$arguments);
+        return $this->baseRepository;
+    }
+
 
     /**
      * @return Collection|null
@@ -167,10 +178,10 @@ class BaseRepositoryExtend
      * @param string $operator
      * @param int $count
      * @param string $boolean
-     * @param \Closure|null $callback
+     * @param Closure|null $callback
      * @return BaseRepository
      */
-    public function has(Relation|string $relation, string $operator = '>=', int $count = 1, string $boolean = 'and', \Closure|null $callback = null): BaseRepository
+    public function has(Relation|string $relation, string $operator = '>=', int $count = 1, string $boolean = 'and', Closure|null $callback = null): BaseRepository
     {
         $this->builder->has($relation, $operator, $count, $boolean, $callback);
         return $this->baseRepository;
@@ -179,12 +190,12 @@ class BaseRepositoryExtend
 
     /**
      * @param string $relation
-     * @param \Closure|null $callback
+     * @param Closure|null $callback
      * @param string $operator
      * @param int $count
      * @return BaseRepository
      */
-    public function whereHas(string $relation, \Closure|null $callback = null, string $operator = '>=', int $count = 1): BaseRepository
+    public function whereHas(string $relation, Closure|null $callback = null, string $operator = '>=', int $count = 1): BaseRepository
     {
         $this->builder->whereHas($relation, $callback, $operator, $count);
         return $this->baseRepository;
@@ -193,12 +204,12 @@ class BaseRepositoryExtend
 
     /**
      * @param string $relation
-     * @param \Closure|null $callback
+     * @param Closure|null $callback
      * @param string $operator
      * @param int $count
      * @return BaseRepository
      */
-    public function orWhereHas(string $relation, \Closure|null $callback = null, string $operator = '>=', int $count = 1): BaseRepository
+    public function orWhereHas(string $relation, Closure|null $callback = null, string $operator = '>=', int $count = 1): BaseRepository
     {
         $this->builder->orWhereHas($relation, $callback, $operator, $count);
         return $this->baseRepository;
@@ -212,7 +223,7 @@ class BaseRepositoryExtend
      * @param string|null $boolean
      * @return BaseRepository
      */
-    public function where(array|string $column, ?string $operator = null, ?string $value = null, ?string $boolean = 'and')
+    public function where(array|string $column, ?string $operator = null, ?string $value = null, ?string $boolean = 'and'):BaseRepository
     {
         $this->builder->where($column, $operator, $value, $boolean);
         return $this->baseRepository;
@@ -351,11 +362,11 @@ class BaseRepositoryExtend
     /**
      * @param string $column
      * @param string $operator
-     * @param \DateTimeInterface|string|null $value
+     * @param DateTimeInterface|string|null $value
      * @param string $boolean
      * @return BaseRepository
      */
-    public function whereDate(string $column, string $operator, \DateTimeInterface|string|null $value = null, string $boolean = 'and'): BaseRepository
+    public function whereDate(string $column, string $operator, DateTimeInterface|string|null $value = null, string $boolean = 'and'): BaseRepository
     {
         $this->builder->whereDate($column, $operator, $value, $boolean);
         return $this->baseRepository;
@@ -365,11 +376,11 @@ class BaseRepositoryExtend
     /**
      * @param string $column
      * @param string $operator
-     * @param \DateTimeInterface|string|null $value
+     * @param DateTimeInterface|string|null $value
      * @param string $boolean
      * @return BaseRepository
      */
-    public function whereMonth(string $column, string $operator, \DateTimeInterface|string|null $value = null, string $boolean = 'and'): BaseRepository
+    public function whereMonth(string $column, string $operator, DateTimeInterface|string|null $value = null, string $boolean = 'and'): BaseRepository
     {
         $this->builder->whereMonth($column, $operator, $value, $boolean);
         return $this->baseRepository;
@@ -378,11 +389,11 @@ class BaseRepositoryExtend
     /**
      * @param string $column
      * @param string $operator
-     * @param \DateTimeInterface|string|null $value
+     * @param DateTimeInterface|string|null $value
      * @param string $boolean
      * @return BaseRepository
      */
-    public function whereDay(string $column, string $operator, \DateTimeInterface|string|null $value = null, string $boolean = 'and'): BaseRepository
+    public function whereDay(string $column, string $operator, DateTimeInterface|string|null $value = null, string $boolean = 'and'): BaseRepository
     {
         $this->builder->whereDay($column, $operator, $value, $boolean);
         return $this->baseRepository;
@@ -392,11 +403,11 @@ class BaseRepositoryExtend
     /**
      * @param string $column
      * @param string $operator
-     * @param \DateTimeInterface|string|null $value
+     * @param DateTimeInterface|string|null $value
      * @param string $boolean
      * @return BaseRepository
      */
-    public function whereYear(string $column, string $operator, \DateTimeInterface|string|null $value = null, string $boolean = 'and'): BaseRepository
+    public function whereYear(string $column, string $operator, DateTimeInterface|string|null $value = null, string $boolean = 'and'): BaseRepository
     {
         $this->builder->whereYear($column, $operator, $value, $boolean);
         return $this->baseRepository;
@@ -406,11 +417,11 @@ class BaseRepositoryExtend
     /**
      * @param string $column
      * @param string $operator
-     * @param \DateTimeInterface|string|null $value
+     * @param DateTimeInterface|string|null $value
      * @param string $boolean
      * @return BaseRepository
      */
-    public function whereTime(string $column, string $operator, \DateTimeInterface|string|null $value = null, string $boolean = 'and'): BaseRepository
+    public function whereTime(string $column, string $operator, DateTimeInterface|string|null $value = null, string $boolean = 'and'): BaseRepository
     {
         $this->builder->whereTime($column, $operator, $value, $boolean);
         return $this->baseRepository;
@@ -449,7 +460,7 @@ class BaseRepositoryExtend
      * @param array $columns
      * @return LengthAwarePaginator
      */
-    public function getAllDataPaginated(array $whereClause = [], array $columns = ["*"])
+    public function getAllDataPaginated(array $whereClause = [], array $columns = ["*"]):LengthAwarePaginator
     {
         return $this->builder
             ->select($columns)
@@ -461,9 +472,9 @@ class BaseRepositoryExtend
     /**
      * @param array $whereClause
      * @param array $columns
-     * @return Builder[]|Collection
+     * @return Collection
      */
-    public function getAllData(array $whereClause = [], array $columns = ["*"])
+    public function getAllData(array $whereClause = [], array $columns = ["*"]):Collection
     {
         return $this->builder
             ->select($columns)
@@ -475,9 +486,9 @@ class BaseRepositoryExtend
     /**
      * @param string|int|array $id
      * @param array $columns
-     * @return Builder|Builder[]|Collection|Model|null
+     * @return Model|null
      */
-    public function getDataById(string|int|array $id, array $columns = ["*"])
+    public function getDataById(string|int|array $id, array $columns = ["*"]):Model|null
     {
         return $this->builder->select($columns)->find($id);
     }
@@ -486,9 +497,9 @@ class BaseRepositoryExtend
     /**
      * @param array $whereClause
      * @param array $columns
-     * @return Builder|Model|object|null
+     * @return Model|null
      */
-    public function getSingleData(array $whereClause = [], array $columns = ["*"])
+    public function getSingleData(array $whereClause = [], array $columns = ["*"]):Model|null
     {
         return $this->builder
             ->select($columns)
@@ -499,9 +510,9 @@ class BaseRepositoryExtend
 
     /**
      * @param array $requestedData
-     * @return Builder|Model
+     * @return Model
      */
-    public function addNewData(array $requestedData)
+    public function addNewData(array $requestedData):Model
     {
         return $this->builder->create($requestedData);
     }
@@ -512,9 +523,9 @@ class BaseRepositoryExtend
      * @param array $requestedData
      * @param array $columns
      * @param bool $isReturnObject
-     * @return Builder|Builder[]|Collection|Model|int|null
+     * @return int|Collection|Model|null
      */
-    public function updateDataById(string|int $id, array $requestedData, array $columns = ["*"], bool $isReturnObject = true)
+    public function updateDataById(string|int $id, array $requestedData, array $columns = ["*"], bool $isReturnObject = true):int|Collection|Model|null
     {
         $updatedData = $this->builder
             ->where("id", $id)
@@ -530,9 +541,9 @@ class BaseRepositoryExtend
      * @param array $requestedData
      * @param array $columns
      * @param bool $isReturnObject
-     * @return Collection|int|null
+     * @return Collection|int
      */
-    public function updateDataByWhereClause(array $whereClause, array $requestedData, array $columns = ["*"], bool $isReturnObject = false)
+    public function updateDataByWhereClause(array $whereClause, array $requestedData, array $columns = ["*"], bool $isReturnObject = false):Collection|int
     {
         $updatedData = $this->builder
             ->where($whereClause)
@@ -545,9 +556,9 @@ class BaseRepositoryExtend
 
     /**
      * @param string|int $id
-     * @return mixed
+     * @return bool
      */
-    public function deleteDataById(string|int $id)
+    public function deleteDataById(string|int $id):bool
     {
         return $this->builder
             ->where("id", $id)
@@ -557,9 +568,9 @@ class BaseRepositoryExtend
 
     /**
      * @param array $whereClause
-     * @return mixed
+     * @return bool
      */
-    public function deleteDataByWhereClause(array $whereClause)
+    public function deleteDataByWhereClause(array $whereClause):bool
     {
         return $this->builder
             ->where($whereClause)
