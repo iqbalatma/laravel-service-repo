@@ -6,7 +6,7 @@ use Exception;
 use Iqbalatma\LaravelServiceRepo\BaseRepository;
 use Iqbalatma\LaravelServiceRepo\BaseRepositoryExtend;
 
-trait RepositoryExtend
+trait RepositoryOverload
 {
     /**
      * @param $name
@@ -72,7 +72,7 @@ trait RepositoryExtend
         /**
          * @note
          * When all of overloading mechanism above is not fulfill we will call method from QueryBuilder
-         * If method does not exist in QueryBuilder, it will throw an exception. It's mean method does not exists
+         * If method does not exist in QueryBuilder, it will throw an exception. It's mean method does not exist
          */
         return $instance->builder->$name(...$arguments);
     }

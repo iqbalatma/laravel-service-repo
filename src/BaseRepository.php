@@ -2,11 +2,9 @@
 
 namespace Iqbalatma\LaravelServiceRepo;
 
-use App\Concerns\QueryExtend;
-use App\Contracts\Abstracts\BaseQueryBuilder;
 use Illuminate\Database\Eloquent\Builder;
 use Iqbalatma\LaravelServiceRepo\Contracts\Interfaces\RepositoryInterface;
-use Iqbalatma\LaravelServiceRepo\Traits\RepositoryExtend;
+use Iqbalatma\LaravelServiceRepo\Traits\RepositoryOverload;
 
 
 /**
@@ -33,12 +31,15 @@ use Iqbalatma\LaravelServiceRepo\Traits\RepositoryExtend;
  * @method BaseRepository orderColumn(array|string|null $orderableColumns = null, string $direction = "ASC")
  * @method static BaseRepository filterColumn(?array $filterableColumns = null, ?array $relationFilterableColumns = null)
  * @method BaseRepository filterColumn(?array $filterableColumns = null, ?array $relationFilterableColumns = null)
- * @mixin RepositoryExtend
+ * @mixin RepositoryOverload
  *
  */
 abstract class BaseRepository implements RepositoryInterface
 {
-    use RepositoryExtend;
+    /**
+     * @note use to overloading method from BaseRepositoryExtend
+     */
+    use RepositoryOverload;
 
     public Builder $builder;
 
@@ -47,10 +48,16 @@ abstract class BaseRepository implements RepositoryInterface
         $this->builder = $builder ?? $this->getBaseQuery();
     }
 
+
+    /**
+     * @note use get set builder instance via model
+     * @return Builder
+     */
     abstract public function getBaseQuery(): Builder;
 
 
     /**
+     * @note use to get QueryBuilder instance
      * @return Builder
      */
     public function build(): Builder
@@ -58,7 +65,10 @@ abstract class BaseRepository implements RepositoryInterface
         return $this->builder;
     }
 
+
     /**
+     * @note use to create instance via static method
+     * @example RoleRepository::init()->getAllDataPaginated();
      * @return BaseRepository
      */
     public static function init(): BaseRepository
@@ -67,7 +77,7 @@ abstract class BaseRepository implements RepositoryInterface
     }
 
     /**
-     * use to implement custom filter param, call it on (for example RoleQuery) and override
+     * @note use to implement custom filter param, call it on (for example RoleQuery) and override
      * @return void
      */
     public function applyAdditionalFilterParams(): void
