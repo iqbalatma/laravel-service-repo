@@ -13,10 +13,10 @@ use Iqbalatma\LaravelServiceRepo\Traits\RepositoryOrder;
 class BaseRepositoryExtend
 {
     use RepositoryOrder {
-        _orderColumn as private orderColumnTrait;
+        RepositoryOrder::_orderColumn as private orderColumnTrait;
     }
     use RepositoryFilter {
-        _filterColumn as private filterColumnTrait;
+        RepositoryFilter::_filterColumn as private filterColumnTrait;
     }
 
     public Builder $builder;
@@ -38,6 +38,12 @@ class BaseRepositoryExtend
         $this->filterColumnTrait($filterableColumns, $relationFilterableColumns);
         $this->baseRepository->applyAdditionalFilterParams();
 
+        return $this->baseRepository;
+    }
+
+    public function forwardScope($name, $arguments)
+    {
+        $this->builder->getModel()->$name($this->builder, ...$arguments);
         return $this->baseRepository;
     }
 
@@ -424,7 +430,7 @@ class BaseRepositoryExtend
         return $this->baseRepository;
     }
 
-    
+
     /**
      * @param array|string $first
      * @param string|null $operator

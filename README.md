@@ -14,6 +14,8 @@ composer require iqbalatma/laravel-service-repo
 Use repository to query your database via model. So you do not need to write same query twice. You can create repository on directroy App/Repositories. 
 Here is example of UserRepository
 
+https://excalidraw.com/#room=24e719b796d8b6e68bca,NNkRKYkFtcOlWIjFZu3wPA
+
 ```php
 <?php
 
