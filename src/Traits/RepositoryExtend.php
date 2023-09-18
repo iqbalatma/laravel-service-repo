@@ -68,6 +68,12 @@ trait RepositoryExtend
             return $instance->{"query" . ucwords($name)}(...$arguments);
         }
 
+
+        /**
+         * @note
+         * When all of overloading mechanism above is not fulfill we will call method from QueryBuilder
+         * If method does not exist in QueryBuilder, it will throw an exception. It's mean method does not exists
+         */
         return $instance->builder->$name(...$arguments);
     }
 
@@ -130,6 +136,12 @@ trait RepositoryExtend
             return $this->{"query" . ucwords($name)}(...$arguments);
         }
 
+
+        /**
+         * @note
+         * When all of overloading mechanism above is not fulfill we will call method from QueryBuilder
+         * If method does not exist in QueryBuilder, it will throw an exception. It's mean method does not exists
+         */
         return $this->builder->$name(...$arguments);
     }
 }
