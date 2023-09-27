@@ -2,6 +2,12 @@
 
 Laravel Service Repository is laravel package for service repository pattern. Service repository pattern helps you to separate concern and move logic into service class. From service class you can query all of your data from repository, not directly using model. This will help you to avoid redundant query and make it easier to maintain.
 
+## Upcomming
+- Customize root of filter and order by config
+- Publish service stub for customization
+- Testing
+- type hint for predefined method on repository extend
+
 
 ## How to install
 Use composer to install Laravel Service Repository Package
@@ -21,6 +27,8 @@ This repository already have some predefined query, but you are free to customiz
 <img width="1211" alt="Screenshot 2023-09-28 at 00 55 06" src="https://github.com/iqbalatma/laravel-service-repo/assets/35129050/cdd0c078-a83c-4002-bae6-d21ab03ff932">
 
 
+
+## Service
 
 
 ## Repository
