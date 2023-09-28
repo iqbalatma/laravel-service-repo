@@ -255,7 +255,6 @@ Before use order column you need to defined column that allowed to order. You ca
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Veelasky\LaravelHashId\Eloquent\HashableId;
 
 
 class User extends Model
@@ -323,7 +322,6 @@ Before use filterColumn method, you need to define list of column that allowed t
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Veelasky\LaravelHashId\Eloquent\HashableId;
 
 
 class User extends Model
@@ -375,6 +373,42 @@ class UserService extends BaseService
 }
 ```
 
+
+> [!NOTE]
+> You can also filter column on relation.
+> But you need to define relation and filterable column on model
+
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Profile;
+
+class User extends Model
+{
+    use HasFactory;
+
+    public array $filterableColumns = [
+        "name" => "users.name",
+        "address" => "users.address",
+    ];
+
+    public array $relationFilterableColumns = [
+        "profile" => [
+            "phone" => "profiles.pone"
+        ]
+    ];
+
+    public function profile(){
+        return $this->belongsTo(Profile::class);
+    }   
+}
+```
+> You when you want to filter relation of model, you need to make sure the relation is already defined.
+> And then you need to create $relationFilterableColumns property.
+> The key of this property is relation name and the value is filterable column just like $filterableColumns property. 
 
 
 
