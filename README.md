@@ -412,3 +412,10 @@ class User extends Model
 
 
 
+> [!NOTE]
+> You can also override relation filterable column just pass array filterable column on second argumen of filterColumn.
+> Example : filterColumn([], [
+        "profile" => [
+            "phone" => "profiles.pone"
+        ]
+    ])
