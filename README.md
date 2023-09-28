@@ -3,10 +3,10 @@
 Laravel Service Repository is laravel package for service repository pattern. Service repository pattern helps you to separate concern and move logic into service class. From service class you can query all of your data from repository, not directly using model. This will help you to avoid redundant query and make it easier to maintain.
 
 ## Upcomming
-- Customize root of filter and order by config
-- Publish service stub for customization
-- Testing
-- type hint for predefined method on repository extend
+- [ ] Customize root of filter and order by config
+- [ ] Publish service stub for customization
+- [ ] Testing
+- [ ] Type hint for predefined method on repository extend
 
 
 ## How to install
@@ -75,5 +75,27 @@ class UserRepository extends BaseRepository
     }
 }
 ```
+### How to call repository from service
+You can call method on repository via static or non-static method.
 
+> [!NOTE]
+> Here is example call repository via static method
+```php
+<?php
+
+namespace App\Services\Management;
+
+use Iqbalatma\LaravelServiceRepo\BaseService;
+use App\Repositories\UserRepository;
+
+
+class UserService extends BaseService
+{
+
+    public function getAllDataPaginated():LengthAwarePaginator
+    {
+        return UserRepository::getAllDataPaginated();
+    }
+}
+```
 
