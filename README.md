@@ -419,3 +419,30 @@ class User extends Model
             "phone" => "profiles.pone"
         ]
     ])
+
+## How to custom operator on filterColumn
+
+You just need to define array for column and operator
+
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+
+class User extends Model
+{
+    use HasFactory;
+
+    public array $filterableColumns = [
+        "name" => [
+            "column" => "users.name"
+            "operator" => "like"
+        ],
+        "address" => "users.address",
+    ];
+}
+```
+
