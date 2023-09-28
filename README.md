@@ -120,3 +120,99 @@ class UserService extends BaseService
 }
 ```
 
+
+### Predefined Method Query
+You can call predefied method from service. Here is list of predefined method query and it's use case.
+```php
+<?php
+function getAllDataPaginated(array $whereClause = [], array $columns = ["*"]);
+function getAllData(array $whereClause = [], array $columns = ["*"]);
+function getDataById(string|int|array $id, array $columns = ["*"]);
+function getSingleData(array $whereClause = [], array $columns = ["*"]);
+function addNewData(array $requestedData);
+function updateDataById(string|int $id, array $requestedData, array $columns = ["*"], bool $isReturnObject = true);
+function updateDataByWhereClause(array $whereClause, array $requestedData, array $columns = ["*"], bool $isReturnObject = false);
+function deleteDataById(string|int $id);
+function deleteDataByWhereClause(array $whereClause);
+```
+
+You can also chaining method before predefined method query.
+
+```php
+<?php
+function with(array|string $relations);
+function without(array|string $relations);
+function withAvg(array|string $relation, string $column);
+function withCount(mixed $relations);
+function withMin(array|string $relation, string $column);
+function withMax(array|string $relation, string $column)
+function withSum(array|string $relation, string $column);
+function has(Relation|string $relation, string $operator = '>=', int $count = 1, string $boolean = 'and', Closure|null $callback = null);
+function whereHas(string $relation, Closure|null $callback = null, string $operator = '>=', int $count = 1);
+
+and other method ....
+```
+
+
+> [!NOTE]
+> Here is how to use predefined method with chaining method for additional query
+
+```php
+<?php
+
+namespace App\Services\Management;
+
+use Iqbalatma\LaravelServiceRepo\BaseService;
+use App\Repositories\UserRepository;
+use Illuminate\Pagination\LengthAwarePaginator;
+
+class UserService extends BaseService
+{
+
+    public function getAllDataPaginated():LengthAwarePaginator
+    {
+        return UserRepository::with('profile')->getAllDataPaginated();
+    }
+}
+```
+
+### How to add predefined method
+You can also create your own method on repository. For example you want to create query that will be execute in many place and want to avoid redundant code.
+
+> [!IMPORTANT]
+> Create predefined method query with ***query*** prefix. So you can call statically **without** query prefix.
+> Example : UserRepository::getAllActiveUser()
+```php
+<?php
+
+namespace App\Repositories;
+use Iqbalatma\LaravelServiceRepo\BaseRepository;
+use Illuminate\Database\Eloquent\Builder;
+use App\Models\User;
+
+class UserRepository extends BaseRepository
+{
+
+     /**
+     * use to set base query builder
+     * @return Builder
+     */
+    public function getBaseQuery(): Builder
+    {
+        return User::query();
+    }
+
+    /**
+     * use this to add custom query on filterColumn method
+     * @return void
+     */
+    public function applyAdditionalFilterParams(): void
+    {
+    }
+
+    public function queryGetAllActiveUser(){
+          return $this->builder->where('status', 'active')->get();
+    }
+}
+```
+
