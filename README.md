@@ -2,21 +2,21 @@
 
 Laravel Service Repository is laravel package for service repository pattern. Service repository pattern helps you to separate concern and move logic into service class. From service class you can query all of your data from repository, not directly using model. This will help you to avoid redundant query and make it easier to maintain.
 
-## Upcomming
+# Upcomming
 - [ ] Customize root of filter and order by config
 - [ ] Publish service stub for customization
 - [ ] Testing
 - [ ] Type hint for predefined method on repository extend
 
 
-## How to install
+# How to install
 Use composer to install Laravel Service Repository Package
 
 ```
 composer require iqbalatma/laravel-service-repo
 ```
 
-## Concept
+# Concept
 Here is concept of service repository, you can see diagram below
 Controller will handle only http request and http response. This will make your controller thin.
 All of data from request will be validate on Validation class. All validation rule will be defined here
@@ -28,7 +28,7 @@ This repository already have some predefined query, but you are free to customiz
 
 
 
-## Service
+# Service
 Service is use for your business logic. You can call service from controller or from another service. This package have base service and you can extend to this service. You can also generate service via artisan command.
 
 ```
@@ -37,7 +37,7 @@ php artisan make:service UserService
 This command will generate service for you in ***App/Services*** directory.
 
 
-## Repository
+# Repository
 Use repository to query your database via model. So you do not need to write same query twice. You can generate repository on directroy ***App/Repositories*** via artisan command. 
 
 ```
@@ -75,7 +75,7 @@ class UserRepository extends BaseRepository
     }
 }
 ```
-### How to call repository from service
+## How to call repository from service
 You can call method on repository via static or non-static method.
 
 > [!NOTE]
@@ -121,7 +121,7 @@ class UserService extends BaseService
 ```
 
 
-### Predefined Method Query
+## Predefined Method Query
 You can call predefied method from service. Here is list of predefined method query and it's use case.
 ```php
 <?php
@@ -176,7 +176,7 @@ class UserService extends BaseService
 }
 ```
 
-### How to add predefined method
+## How to add predefined method
 You can also create your own method on repository. For example you want to create query that will be execute in many place and want to avoid redundant code.
 
 > [!IMPORTANT]
