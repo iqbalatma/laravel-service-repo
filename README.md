@@ -87,7 +87,7 @@ namespace App\Services\Management;
 
 use Iqbalatma\LaravelServiceRepo\BaseService;
 use App\Repositories\UserRepository;
-
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class UserService extends BaseService
 {
@@ -95,6 +95,27 @@ class UserService extends BaseService
     public function getAllDataPaginated():LengthAwarePaginator
     {
         return UserRepository::getAllDataPaginated();
+    }
+}
+```
+
+> [!NOTE]
+> Here is example call repository via non-static method
+```php
+<?php
+
+namespace App\Services\Management;
+
+use Iqbalatma\LaravelServiceRepo\BaseService;
+use App\Repositories\UserRepository;
+use Illuminate\Pagination\LengthAwarePaginator;
+
+class UserService extends BaseService
+{
+
+    public function getAllDataPaginated():LengthAwarePaginator
+    {
+        return (new UserRepository())->getAllDataPaginated();
     }
 }
 ```
