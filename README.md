@@ -244,3 +244,72 @@ class Tag extends Model
 ```
 > you can call this scope TagRepository::active()->getAllDataPaginated();
 
+
+## How to use orderColumn method
+Order column is predefined method that will use query param from http request for order requested data.
+Before use order column you need to defined column that allowed to order. You can define that orderable column inside the model.
+
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Veelasky\LaravelHashId\Eloquent\HashableId;
+
+
+class User extends Model
+{
+    use HasFactory;
+
+    public array $orderableColumns = [
+        "name" => "users.name",
+        "guard_name" => "users.guard_name",
+    ];
+}
+```
+> As you can see, property $orderableColumns is array that has key and value. Key of this property is use to key from http request.
+> You can customize this key into whatever you want
+> The value of this property is mapping to column name of database table
+
+To use this order you just need to call orderColumn method when calling repository
+```php
+<?php
+
+namespace App\Services\Management;
+
+Iqbalatma\LaravelServiceRepo\BaseService;
+use App\Repositories\UserRepository;
+
+class UserService extends BaseService
+{
+    public function getAllDataPaginated(){
+        return UserRepository::orderColumn()->getAllDataPaginated();
+    }
+}
+```
+
+> In other condition you can also pass parameter into orderColumn method to override orderable column
+
+
+```php
+<?php
+
+namespace App\Services\Management;
+
+Iqbalatma\LaravelServiceRepo\BaseService;
+use App\Repositories\UserRepository;
+
+class UserService extends BaseService
+{
+    public function getAllDataPaginated(){
+        return UserRepository::orderColumn([
+            "name" => "users.name",
+            "guard_name" => "users.guard_name",
+        ])->getAllDataPaginated();
+    }
+}
+```
+
+
+
