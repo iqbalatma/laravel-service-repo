@@ -19,10 +19,12 @@ abstract class BaseService implements ServiceInterface
      */
     protected Model $serviceEntity;
 
+
     /**
      * @var array $requestedData
      */
     protected array $requestedData;
+
 
     /**
      * Use to check is data exists
@@ -41,6 +43,7 @@ abstract class BaseService implements ServiceInterface
         return true;
     }
 
+
     /**
      * Use to check data or entity exists
      *
@@ -50,10 +53,11 @@ abstract class BaseService implements ServiceInterface
      */
     public function isExists(mixed $data): void
     {
-        if ($data?->count() == 0 || !$data) {
+        if (!$data || $data?->count() === 0) {
             throw new EmptyDataException("Data doesn't exists !");
         }
     }
+
 
     /**
      * @param Model $serviceEntity
