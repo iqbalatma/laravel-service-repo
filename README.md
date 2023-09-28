@@ -216,3 +216,31 @@ class UserRepository extends BaseRepository
 }
 ```
 
+## How to call model scope on repository
+Sometimes you want to create model local scope and still want to use repository to call it. 
+
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+
+
+class Tag extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        "name"
+    ];
+
+    public function scopeActive(Builder $query){
+        $query->where('status', '=', 'active');
+    }    
+}
+```
+> you can call this scope TagRepository::active()->getAllDataPaginated();
+
