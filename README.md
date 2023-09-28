@@ -264,7 +264,7 @@ class User extends Model
 
     public array $orderableColumns = [
         "name" => "users.name",
-        "guard_name" => "users.guard_name",
+        "address" => "users.address",
     ];
 }
 ```
@@ -305,11 +305,76 @@ class UserService extends BaseService
     public function getAllDataPaginated(){
         return UserRepository::orderColumn([
             "name" => "users.name",
-            "guard_name" => "users.guard_name",
+            "address" => "users.address",
         ])->getAllDataPaginated();
     }
 }
 ```
+
+## How to use filterColumn method
+Filter column is predefined method to filter data via query param from http request
+Before use filterColumn method, you need to define list of column that allowed to filter
+> [!IMPORTANT]
+> All of filter query using operator '=', but you can define custom operator based on your needs
+
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Veelasky\LaravelHashId\Eloquent\HashableId;
+
+
+class User extends Model
+{
+    use HasFactory;
+
+    public array $filterableColumns = [
+        "name" => "users.name",
+        "address" => "users.address",
+    ];
+}
+```
+
+To use filter column you just need to call and chain this method. You can also chain with other method like orderColumn
+```php
+<?php
+
+namespace App\Services\Management;
+
+Iqbalatma\LaravelServiceRepo\BaseService;
+use App\Repositories\UserRepository;
+
+class UserService extends BaseService
+{
+    public function getAllDataPaginated(){
+        return UserRepository::orderColumn()->filterColumn()->getAllDataPaginated();
+    }
+}
+```
+
+> In other condition you can also pass parameter into filterColumn method to override filterable column
+
+```php
+<?php
+
+namespace App\Services\Management;
+
+Iqbalatma\LaravelServiceRepo\BaseService;
+use App\Repositories\UserRepository;
+
+class UserService extends BaseService
+{
+    public function getAllDataPaginated(){
+        return UserRepository::orderColumn()->filterColumn([
+            "name" => "users.name",
+            "address" => "users.address",
+        ])->getAllDataPaginated();
+    }
+}
+```
+
 
 
 
