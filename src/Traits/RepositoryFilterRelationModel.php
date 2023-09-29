@@ -89,7 +89,7 @@ trait RepositoryFilterRelationModel
 
         /**
          * this is for $filterableColumns = [
-         *  "name" => "users.name"
+         *      "name" => "users.name"
          * ]
          *
          * which mean that the value is string
@@ -105,17 +105,13 @@ trait RepositoryFilterRelationModel
          *      ]
          * ]
          */
-        if (isset($dbColumnName["column"])) {
-            $dbColumnName = $dbColumnName["column"];
-        }
-
-        return $dbColumnName;
+        return $dbColumnName["column"] ?? $dbColumnName;
     }
 
 
     /**
      * @param array|null $relationFilterableColumns
-     * @return RepositoryFilter|BaseRepositoryExtend
+     * @return RepositoryFilterRelationModel|BaseRepositoryExtend
      */
     private function setRelationFilterableColumns(?array $relationFilterableColumns): self
     {

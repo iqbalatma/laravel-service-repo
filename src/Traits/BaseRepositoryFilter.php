@@ -36,7 +36,9 @@ trait BaseRepositoryFilter
      */
     private function checkLikeOperator(string $operator, ?string &$value): void
     {
-        if (!is_null($value) && strtolower($operator) === "like") $value = "%$value%";
+        if (!is_null($value) && strtolower($operator) === "like") {
+            $value = "%$value%";
+        }
     }
 
 }
