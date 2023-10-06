@@ -62,7 +62,7 @@ class BaseRepositoryExtend
      * @param $arguments
      * @return BaseRepository
      */
-    public function forwardScope($name, $arguments):BaseRepository
+    public function forwardScope($name, $arguments): BaseRepository
     {
         $this->builder->getModel()->$name($this->builder, ...$arguments);
         return $this->baseRepository;
@@ -223,7 +223,7 @@ class BaseRepositoryExtend
      * @param string|null $boolean
      * @return BaseRepository
      */
-    public function where(array|string $column, ?string $operator = null, ?string $value = null, ?string $boolean = 'and'):BaseRepository
+    public function where(array|string $column, ?string $operator = null, ?string $value = null, ?string $boolean = 'and'): BaseRepository
     {
         $this->builder->where($column, $operator, $value, $boolean);
         return $this->baseRepository;
@@ -458,14 +458,18 @@ class BaseRepositoryExtend
     /**
      * @param array $whereClause
      * @param array $columns
+     * @param int|null $perPage
      * @return LengthAwarePaginator
      */
-    public function getAllDataPaginated(array $whereClause = [], array $columns = ["*"]):LengthAwarePaginator
+    public function getAllDataPaginated(array $whereClause = [], array $columns = ["*"], ?int $perPage = null): LengthAwarePaginator
     {
+        if (!$perPage) {
+            $perPage = request()->query("perPage", config('servicerepo.perpage'));
+        }
         return $this->builder
             ->select($columns)
             ->where($whereClause)
-            ->paginate(15);
+            ->paginate($perPage);
     }
 
 
@@ -474,7 +478,7 @@ class BaseRepositoryExtend
      * @param array $columns
      * @return Collection
      */
-    public function getAllData(array $whereClause = [], array $columns = ["*"]):Collection
+    public function getAllData(array $whereClause = [], array $columns = ["*"]): Collection
     {
         return $this->builder
             ->select($columns)
@@ -488,7 +492,7 @@ class BaseRepositoryExtend
      * @param array $columns
      * @return Model|null
      */
-    public function getDataById(string|int|array $id, array $columns = ["*"]):Model|null
+    public function getDataById(string|int|array $id, array $columns = ["*"]): Model|null
     {
         return $this->builder->select($columns)->find($id);
     }
@@ -499,7 +503,7 @@ class BaseRepositoryExtend
      * @param array $columns
      * @return Model|null
      */
-    public function getSingleData(array $whereClause = [], array $columns = ["*"]):Model|null
+    public function getSingleData(array $whereClause = [], array $columns = ["*"]): Model|null
     {
         return $this->builder
             ->select($columns)
@@ -512,7 +516,7 @@ class BaseRepositoryExtend
      * @param array $requestedData
      * @return Model
      */
-    public function addNewData(array $requestedData):Model
+    public function addNewData(array $requestedData): Model
     {
         return $this->builder->create($requestedData);
     }
@@ -525,7 +529,7 @@ class BaseRepositoryExtend
      * @param bool $isReturnObject
      * @return int|Collection|Model|null
      */
-    public function updateDataById(string|int $id, array $requestedData, array $columns = ["*"], bool $isReturnObject = true):int|Collection|Model|null
+    public function updateDataById(string|int $id, array $requestedData, array $columns = ["*"], bool $isReturnObject = true): int|Collection|Model|null
     {
         $updatedData = $this->builder
             ->where("id", $id)
@@ -543,7 +547,7 @@ class BaseRepositoryExtend
      * @param bool $isReturnObject
      * @return Collection|int
      */
-    public function updateDataByWhereClause(array $whereClause, array $requestedData, array $columns = ["*"], bool $isReturnObject = false):Collection|int
+    public function updateDataByWhereClause(array $whereClause, array $requestedData, array $columns = ["*"], bool $isReturnObject = false): Collection|int
     {
         $updatedData = $this->builder
             ->where($whereClause)
@@ -558,7 +562,7 @@ class BaseRepositoryExtend
      * @param string|int $id
      * @return bool
      */
-    public function deleteDataById(string|int $id):bool
+    public function deleteDataById(string|int $id): bool
     {
         return $this->builder
             ->where("id", $id)
@@ -570,7 +574,7 @@ class BaseRepositoryExtend
      * @param array $whereClause
      * @return bool
      */
-    public function deleteDataByWhereClause(array $whereClause):bool
+    public function deleteDataByWhereClause(array $whereClause): bool
     {
         return $this->builder
             ->where($whereClause)
