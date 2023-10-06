@@ -13,8 +13,8 @@ use Iqbalatma\LaravelServiceRepo\Traits\RepositoryOverload;
 
 
 /**
- * @method static getAllDataPaginated(array $whereClause = [], array $columns = ["*"]):LengthAwarePaginator
- * @method getAllDataPaginated(array $whereClause = [], array $columns = ["*"]):LengthAwarePaginator
+ * @method static getAllDataPaginated(array $whereClause = [], array $columns = ["*"], ?int $perPage = null): LengthAwarePaginator
+ * @method getAllDataPaginated(array $whereClause = [], array $columns = ["*"], ?int $perPage = null): LengthAwarePaginator
  * @method static getAllData(array $whereClause = [], array $columns = ["*"]):Collection
  * @method getAllData(array $whereClause = [], array $columns = ["*"]):Collection
  * @method static Model|null|mixed getDataById(string|int|array $id, array $columns = ["*"])
