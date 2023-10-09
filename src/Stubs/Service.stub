@@ -1,9 +1,9 @@
 <?php
 
 namespace *NAMESPACE*;
-use Iqbalatma\LaravelServiceRepo\BaseService;
+use *BASE_SERVICE_PARENT_CLASS_NAMESPACE*;
 
-class *CLASS_NAME* extends BaseService
+class *CLASS_NAME* extends *BASE_SERVICE_PARENT_CLASS*
 {
     protected $repository;
 

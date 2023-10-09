@@ -1,11 +1,11 @@
 <?php
 
 namespace *NAMESPACE*;
-use Iqbalatma\LaravelServiceRepo\BaseRepository;
+use *BASE_REPOSITORY_PARENT_CLASS_NAMESPACE*;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\*MODEL_NAME*;
 
-class *CLASS_NAME* extends BaseRepository
+class *CLASS_NAME* extends *BASE_REPOSITORY_PARENT_CLASS*
 {
 
      /**

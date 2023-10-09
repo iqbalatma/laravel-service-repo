@@ -13,7 +13,7 @@ class ServiceRepoProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/config/servicerepo.php', 'servicerepo');
+        $this->mergeConfigFrom(__DIR__ . '/Config/servicerepo.php', 'servicerepo');
     }
 
     /**
@@ -29,7 +29,7 @@ class ServiceRepoProvider extends ServiceProvider
         }
 
         $this->publishes([
-            __DIR__.'/config/servicerepo.php' => config_path('servicerepo.php'),
+            __DIR__ . '/Config/servicerepo.php' => config_path('servicerepo.php'),
         ]);
     }
 }
