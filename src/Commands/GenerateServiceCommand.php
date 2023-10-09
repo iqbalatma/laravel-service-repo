@@ -65,9 +65,14 @@ class GenerateServiceCommand extends Command
             $namespace = "\\" . implode("\\", $explodedNamespace);
         }
 
+        $baseServiceNamespace = config("servicerepo.base_service_parent_class");
+        $baseServiceNamespaceExploded = explode('\\', $baseServiceNamespace);
+
         return [
             'NAMESPACE' => ucwords(str_replace("/", "\\", config("servicerepo.target_service_dir", "app/Services"))) . $namespace,
-            'CLASS_NAME' => end($explodedClassName)
+            'CLASS_NAME' => end($explodedClassName),
+            'BASE_SERVICE_PARENT_CLASS_NAMESPACE' => $baseServiceNamespace,
+            'BASE_SERVICE_PARENT_CLASS' => end($baseServiceNamespaceExploded)
         ];
     }
 

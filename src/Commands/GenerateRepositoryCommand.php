@@ -78,11 +78,16 @@ class GenerateRepositoryCommand extends Command
 
         $explodedModelName = explode("/", $this->modelName);
 
+        $baseRepositoryNamespace = config("servicerepo.base_repository_parent_class");
+        $baseRepositoryNamespaceExploded = explode('\\', $baseRepositoryNamespace);
+
         return [
             'NAMESPACE' => ucwords(str_replace("/", "\\", config("servicerepo.target_repository_dir", "app/Repositories"))) . $namespace,
             'MODEL_NAMESPACE' => config("servicerepo.model_root_namespace", "App\\Models") . "\\" . str_replace("/", "\\", $this->modelName),
             'CLASS_NAME' => end($explodedClassName),
             'MODEL_NAME' => end($explodedModelName),
+            'BASE_REPOSITORY_PARENT_CLASS_NAMESPACE' => $baseRepositoryNamespace,
+            'BASE_REPOSITORY_PARENT_CLASS' => end($baseRepositoryNamespaceExploded)
         ];
     }
 
