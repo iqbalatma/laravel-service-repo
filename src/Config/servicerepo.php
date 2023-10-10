@@ -85,5 +85,5 @@ return [
     | set to null if you don't want to use this array key
     |
     */
-    "order_query_param_root" => null,
+    "order_query_param_root" => "order",
 ];

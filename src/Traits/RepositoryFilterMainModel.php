@@ -20,7 +20,7 @@ trait RepositoryFilterMainModel
      */
     private function filterMainModel(): self
     {
-        foreach (array_intersect_key($this->requestQueryParam["filter"], $this->filterableColumns) as $requestedKey => $value) {
+        foreach (array_intersect_key($this->requestQueryParam, $this->filterableColumns) as $requestedKey => $value) {
             # continue loop when value is null
             if (is_null($value)) {
                 continue;
@@ -82,7 +82,6 @@ trait RepositoryFilterMainModel
             $requestCreatedStartFilter = empty(request()->query("filter_created_at")[0]);
             $requestCreatedEndFilter = empty(request()->query("filter_created_at")[1]);
         }
-
 
         $this->builder->when(!$requestCreatedStartFilter, function (Builder $query) use ($filterKey) {
             try {
