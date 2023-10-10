@@ -20,7 +20,9 @@ trait RepositoryOrder
 
 
         if (is_array($orderableColumns)) {
-            $requestQueryParam = request()->query();
+            $requestQueryParam = config("servicerepo.order_query_param_root") ?
+                request()->query(config("servicerepo.order_query_param_root"), []) :
+                request()->query();
             if ($this->isOrderRequestExists($requestQueryParam)) {
                 $columns = array_intersect_key($requestQueryParam["order"], $orderableColumns);
 
