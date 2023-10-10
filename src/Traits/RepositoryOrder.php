@@ -46,8 +46,19 @@ trait RepositoryOrder
      */
     private function defaultOrderColumn(): void
     {
-        $this->builder->when(!empty(request()->query()["order"]["created_at"]), function (Builder $query) {
-            $query->orderBy("created_at", request()->query()["order"]["created_at"]);
+        if ($orderKey = config('servicerepo.order_query_param_root')) {
+            $requestCreatedOrder = empty(request()->query()[$orderKey]["created_at"]);
+        } else {
+            $requestCreatedOrder = empty(request()->query("order_created_at"));
+        }
+
+
+        $this->builder->when(!$requestCreatedOrder, function (Builder $query) use ($orderKey) {
+            $query->orderBy("created_at",
+                $orderKey ?
+                    request()->query()[$orderKey]["created_at"] :
+                    request()->query("order_created_at")
+            );
         });
     }
 

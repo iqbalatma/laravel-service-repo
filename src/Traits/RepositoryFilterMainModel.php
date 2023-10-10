@@ -75,21 +75,44 @@ trait RepositoryFilterMainModel
      */
     private function defaultFilterableColumn(): self
     {
-        $this->builder->when(!empty(request()?->query()["filter"]["created_at"][0]), function (Builder $query) {
+        if ($filterKey = config('servicerepo.filter_query_param_root')) {
+            $requestCreatedStartFilter = empty(request()->query()[$filterKey]["created_at"][0]);
+            $requestCreatedEndFilter = empty(request()->query()[$filterKey]["created_at"][1]);
+        } else {
+            $requestCreatedStartFilter = empty(request()->query("filter_created_at")[0]);
+            $requestCreatedEndFilter = empty(request()->query("filter_created_at")[1]);
+        }
+
+
+        $this->builder->when(!$requestCreatedStartFilter, function (Builder $query) use ($filterKey) {
             try {
-                $date = Carbon::createFromFormat('Y-m-d', request()?->query()["filter"]["created_at"][0]);
+                $date = Carbon::createFromFormat('Y-m-d', $filterKey ?
+                    request()->query()[$filterKey]["created_at"][0] :
+                    request()->query("filter_created_at")[0]
+                );
             } catch (\Exception $e) {
-                throw ValidationException::withMessages(['filter.created_at.0' => 'Date format should be yyyy-mm-dd']);
+                if ($filterKey) {
+                    throw ValidationException::withMessages(["$filterKey.created_at.0" => 'Date format should be yyyy-mm-dd']);
+                } else {
+                    throw ValidationException::withMessages(["filter_created_at.0" => 'Date format should be yyyy-mm-dd']);
+                }
             }
 
             $query->where("created_at", ">=", $date->startOfDay());
         });
 
-        $this->builder->when(!empty(request()?->query()["filter"]["created_at"][1]), function (Builder $query) {
+        $this->builder->when(!$requestCreatedEndFilter, function (Builder $query) use ($filterKey) {
             try {
-                $date = Carbon::createFromFormat('Y-m-d', request()?->query()["filter"]["created_at"][1]);
+                $date = Carbon::createFromFormat('Y-m-d', $filterKey ?
+                    request()->query()[$filterKey]["created_at"][1] :
+                    request()->query("filter_created_at")[1]
+                );
             } catch (\Exception $e) {
-                throw ValidationException::withMessages(['filter.created_at.1' => 'Date format should be yyyy-mm-dd']);
+                if ($filterKey) {
+                    throw ValidationException::withMessages(["$filterKey.created_at.1" => 'Date format should be yyyy-mm-dd']);
+                } else {
+                    throw ValidationException::withMessages(["filter_created_at.1" => 'Date format should be yyyy-mm-dd']);
+                }
             }
 
             $query->where("created_at", "<=", $date->endOfDay());
