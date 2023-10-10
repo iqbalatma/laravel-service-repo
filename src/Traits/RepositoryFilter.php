@@ -2,10 +2,6 @@
 
 namespace Iqbalatma\LaravelServiceRepo\Traits;
 
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Validation\ValidationException;
-use Iqbalatma\LaravelServiceRepo\BaseRepository;
 use Iqbalatma\LaravelServiceRepo\BaseRepositoryExtend;
 
 trait RepositoryFilter
@@ -23,11 +19,9 @@ trait RepositoryFilter
             ->setFilterableColumns($filterableColumns)
             ->setRelationFilterableColumns($relationFilterableColumns);
 
-        if ($this->isFilterRequestExists()) {
-            $this->defaultFilterableColumn()
-                ->filterMainModel()
-                ->filterRelationModel();
-        }
+        $this->defaultFilterableColumn()
+            ->filterMainModel()
+            ->filterRelationModel();
 
         return $this;
     }

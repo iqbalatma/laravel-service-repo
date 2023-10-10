@@ -52,13 +52,16 @@ trait RepositoryOrder
             $requestCreatedOrder = empty(request()->query("order_created_at"));
         }
 
-
         $this->builder->when(!$requestCreatedOrder, function (Builder $query) use ($orderKey) {
-            $query->orderBy("created_at",
-                $orderKey ?
-                    request()->query()[$orderKey]["created_at"] :
-                    request()->query("order_created_at")
-            );
+            $direction = $orderKey ?
+                request()->query()[$orderKey]["created_at"] :
+                request()->query("order_created_at");
+
+            $direction = strtolower($direction);
+
+            if ($direction === "asc" || $direction === "desc") {
+                $query->orderBy("created_at", $direction);
+            }
         });
     }
 

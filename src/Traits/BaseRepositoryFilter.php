@@ -22,14 +22,6 @@ trait BaseRepositoryFilter
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    private function isFilterRequestExists(): bool
-    {
-        return isset($this->requestQueryParam["filter"]) && is_array($this->requestQueryParam["filter"]);
-    }
-
 
     /**
      * @param string $operator
