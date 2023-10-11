@@ -43,7 +43,7 @@ trait RepositoryFilterRelationModel
     {
         // looping for every relation
         foreach ($this->relationFilterableColumns as $relationName => $filterableColumns) {
-            $intersectedFilter = array_intersect_key($this->requestQueryParam["filter"], $filterableColumns);
+            $intersectedFilter = array_intersect_key($this->requestQueryParam, $filterableColumns);
 
             // looping for every column on relation
             foreach ($intersectedFilter as $requestedKey => $requestValue) {
