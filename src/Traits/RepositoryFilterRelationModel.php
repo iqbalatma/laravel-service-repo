@@ -48,7 +48,7 @@ trait RepositoryFilterRelationModel
             // looping for every column on relation
             foreach ($intersectedFilter as $requestedKey => $requestValue) {
                 if ($requestValue) {
-                    $dbOperator = $this->getDBOperator($requestedKey);
+                    $dbOperator = $this->getRelationDBOperator($filterableColumns, $requestedKey);
                     $dbColumnName = $this->getRelationDBColumn($relationName, $requestedKey);
 
 
@@ -118,5 +118,15 @@ trait RepositoryFilterRelationModel
         $this->relationFilterableColumns = $relationFilterableColumns ?? $this->builder->getModel()->relationFilterableColumns ?? [];
 
         return $this;
+    }
+
+    /**
+     * @param array $relationFilterableColumn
+     * @param string $requestedKey
+     * @return string
+     */
+    private function getRelationDBOperator(array $relationFilterableColumn, string $requestedKey): string
+    {
+        return $relationFilterableColumn[$requestedKey]["operator"] ?? self::$defaultOperator;
     }
 }
