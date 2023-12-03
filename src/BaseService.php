@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Iqbalatma\LaravelServiceRepo\Contracts\Interfaces\ServiceInterface;
 use Iqbalatma\LaravelServiceRepo\Exceptions\EmptyDataException;
 
+/**
+ * @template T
+ */
 abstract class BaseService implements ServiceInterface
 {
     /**
@@ -71,7 +74,7 @@ abstract class BaseService implements ServiceInterface
 
 
     /**
-     * @return Model
+     * @return T
      */
     public function getServiceEntity(): Model
     {
