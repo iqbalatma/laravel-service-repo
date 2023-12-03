@@ -91,10 +91,15 @@ abstract class BaseService implements ServiceInterface
 
 
     /**
-     * @return array
+     * @param string|null $key
+     * @return array|string|null
      */
-    public function getRequestedData(): array
+    public function getRequestedData(string $key = null): array|string|null
     {
-        return $this->requestedData;
+        if (isset($key)){
+            return $this->requestedData[$key] ?? null;
+        }else{
+            return $this->requestedData;
+        }
     }
 }
