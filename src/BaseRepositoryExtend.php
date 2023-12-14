@@ -464,7 +464,7 @@ class BaseRepositoryExtend
     public function getAllDataPaginated(array $whereClause = [], array $columns = ["*"], ?int $perPage = null): LengthAwarePaginator
     {
         if (!$perPage) {
-            $perPage = request()->query("perPage", config('servicerepo.perpage'));
+            $perPage = request()->query(config("servicerepo.perpage.key"), config('servicerepo.perpage.value'));
         }
         return $this->builder
             ->select($columns)
