@@ -13,14 +13,14 @@ use Iqbalatma\LaravelServiceRepo\Traits\RepositoryOverload;
 
 
 /**
- * @method static getAllDataPaginated(array $whereClause = [], array $columns = ["*"], ?int $perPage = null): LengthAwarePaginator
- * @method getAllDataPaginated(array $whereClause = [], array $columns = ["*"], ?int $perPage = null): LengthAwarePaginator
- * @method static getAllData(array $whereClause = [], array $columns = ["*"]):Collection
- * @method getAllData(array $whereClause = [], array $columns = ["*"]):Collection
- * @method static Model|null|mixed getDataById(string|int|array $id, array $columns = ["*"])
- * @method Model|null|mixed getDataById(string|int|array $id, array $columns = ["*"])
- * @method static Model|null|mixed getSingleData(array $whereClause = [], array $columns = ["*"])
- * @method Model|null|mixed getSingleData(array $whereClause = [], array $columns = ["*"])
+ * @method static getAllDataPaginated(array $whereClause = [], array|null $columns = ["*"], ?int $perPage = null): LengthAwarePaginator
+ * @method getAllDataPaginated(array $whereClause = [], array|null $columns = ["*"], ?int $perPage = null): LengthAwarePaginator
+ * @method static getAllData(array $whereClause = [], array|null $columns = ["*"]):Collection
+ * @method getAllData(array $whereClause = [], array|null $columns = ["*"]):Collection
+ * @method static Model|null|mixed getDataById(string|int|array $id, array|null $columns = ["*"])
+ * @method Model|null|mixed getDataById(string|int|array $id, array|null $columns = ["*"])
+ * @method static Model|null|mixed getSingleData(array $whereClause = [], array|null $columns = ["*"])
+ * @method Model|null|mixed getSingleData(array $whereClause = [], array|null $columns = ["*"])
  * @method static Model|mixed addNewData(array $requestedData)
  * @method Model addNewData(array $requestedData)
  * @method static int|Collection|Model|null|mixed updateDataById(string|int $id, array $requestedData, array $columns = ["*"], bool $isReturnObject = true)

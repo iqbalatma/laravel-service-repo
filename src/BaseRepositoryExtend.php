@@ -457,31 +457,34 @@ class BaseRepositoryExtend
 
     /**
      * @param array $whereClause
-     * @param array $columns
+     * @param array|null $columns
      * @param int|null $perPage
      * @return LengthAwarePaginator
      */
-    public function getAllDataPaginated(array $whereClause = [], array $columns = ["*"], ?int $perPage = null): LengthAwarePaginator
+    public function getAllDataPaginated(array $whereClause = [], array|null $columns = null, ?int $perPage = null): LengthAwarePaginator
     {
         if (!$perPage) {
             $perPage = request()->query(config("servicerepo.perpage.key"), config('servicerepo.perpage.value'));
         }
-        return $this->builder
-            ->select($columns)
-            ->where($whereClause)
-            ->paginate($perPage);
-    }
 
+        if ($columns){
+            $this->builder->addSelect($columns);
+        }
+
+        return $this->builder->where($whereClause)->paginate($perPage);
+    }
 
     /**
      * @param array $whereClause
-     * @param array $columns
+     * @param array|null $columns
      * @return Collection
      */
-    public function getAllData(array $whereClause = [], array $columns = ["*"]): Collection
+    public function getAllData(array $whereClause = [], array|null $columns = null): Collection
     {
+        if ($columns){
+            $this->builder->addSelect($columns);
+        }
         return $this->builder
-            ->select($columns)
             ->where($whereClause)
             ->get();
     }
@@ -489,24 +492,29 @@ class BaseRepositoryExtend
 
     /**
      * @param string|int|array $id
-     * @param array $columns
+     * @param array|null $columns
      * @return Model|null
      */
-    public function getDataById(string|int|array $id, array $columns = ["*"]): Model|null
+    public function getDataById(string|int|array $id, array|null $columns = null): Model|null
     {
-        return $this->builder->select($columns)->find($id);
+        if ($columns){
+            $this->builder->addSelect($columns);
+        }
+        return $this->builder->find($id);
     }
 
 
     /**
      * @param array $whereClause
-     * @param array $columns
+     * @param array|null $columns
      * @return Model|null
      */
-    public function getSingleData(array $whereClause = [], array $columns = ["*"]): Model|null
+    public function getSingleData(array $whereClause = [], array|null $columns = null): Model|null
     {
+        if ($columns){
+            $this->builder->addSelect($columns);
+        }
         return $this->builder
-            ->select($columns)
             ->where($whereClause)
             ->first();
     }
