@@ -4,6 +4,7 @@ namespace Iqbalatma\LaravelServiceRepo;
 
 use Closure;
 use DateTimeInterface;
+use Illuminate\Contracts\Database\Query\Expression;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -219,11 +220,11 @@ class BaseRepositoryExtend
     /**
      * @param array|string $column
      * @param string|null $operator
-     * @param string|null $value
+     * @param mixed $value
      * @param string|null $boolean
      * @return BaseRepository
      */
-    public function where(array|string $column, ?string $operator = null, ?string $value = null, ?string $boolean = 'and'): BaseRepository
+    public function where(array|string $column, ?string $operator = null, mixed $value = null, ?string $boolean = 'and'): BaseRepository
     {
         $this->builder->where($column, $operator, $value, $boolean);
         return $this->baseRepository;
@@ -233,10 +234,10 @@ class BaseRepositoryExtend
     /**
      * @param array|string $column
      * @param string|null $operator
-     * @param string|null $value
+     * @param mixed $value
      * @return BaseRepository
      */
-    public function orWhere(array|string $column, ?string $operator = null, ?string $value = null): BaseRepository
+    public function orWhere(array|string $column, ?string $operator = null, mixed $value = null): BaseRepository
     {
         $this->builder->orWhere($column, $operator, $value);
         return $this->baseRepository;
@@ -246,11 +247,11 @@ class BaseRepositoryExtend
     /**
      * @param $column
      * @param string|null $operator
-     * @param string|null $value
+     * @param mixed $value
      * @param string|null $boolean
      * @return BaseRepository
      */
-    public function whereNot($column, ?string $operator = null, ?string $value = null, ?string $boolean = 'and'): BaseRepository
+    public function whereNot($column, ?string $operator = null, mixed $value = null, ?string $boolean = 'and'): BaseRepository
     {
         $this->builder->whereNot($column, $operator, $value, $boolean);
         return $this->baseRepository;
@@ -259,12 +260,12 @@ class BaseRepositoryExtend
 
     /**
      * @param string $column
-     * @param array $values
+     * @param iterable $values
      * @param string $boolean
      * @param bool $not
      * @return BaseRepository
      */
-    public function whereBetween(string $column, array $values, string $boolean = 'and', bool $not = false): BaseRepository
+    public function whereBetween(string $column, iterable $values, string $boolean = 'and', bool $not = false): BaseRepository
     {
         $this->builder->whereBetween($column, $values, $boolean, $not);
         return $this->baseRepository;
@@ -273,74 +274,73 @@ class BaseRepositoryExtend
 
     /**
      * @param string $column
-     * @param array|string $values
+     * @param iterable $values
      * @param string $boolean
      * @return BaseRepository
      */
-    public function whereNotBetween(string $column, array|string $values, string $boolean = 'and'): BaseRepository
+    public function whereNotBetween(string $column, iterable $values, string $boolean = 'and'): BaseRepository
     {
         $this->builder->whereNotBetween($column, $values, $boolean);
         return $this->baseRepository;
     }
 
     /**
-     * @param string $column
+     * @param Expression|string $column
      * @param array $values
      * @param string $boolean
      * @param bool $not
      * @return BaseRepository
      */
-    public function whereBetweenColumns(string $column, array $values, string $boolean = 'and', bool $not = false): BaseRepository
+    public function whereBetweenColumns(Expression|string $column, array $values, string $boolean = 'and', bool $not = false): BaseRepository
     {
         $this->builder->whereBetweenColumns($column, $values, $boolean, $not);
         return $this->baseRepository;
     }
 
-
     /**
-     * @param string $column
+     * @param Expression|string $column
      * @param array $values
      * @param string $boolean
      * @return BaseRepository
      */
-    public function whereNotBetweenColumns(string $column, array $values, string $boolean = 'and'): BaseRepository
+    public function whereNotBetweenColumns(Expression|string $column, array $values, string $boolean = 'and'): BaseRepository
     {
         $this->builder->whereNotBetweenColumns($column, $values, $boolean);
         return $this->baseRepository;
     }
 
     /**
-     * @param string $column
+     * @param Expression|string $column
      * @param array $values
      * @param string $boolean
      * @param bool $not
      * @return BaseRepository
      */
-    public function whereIn(string $column, array $values, string $boolean = 'and', bool $not = false): BaseRepository
+    public function whereIn(Expression|string $column, mixed $values, string $boolean = 'and', bool $not = false): BaseRepository
     {
         $this->builder->whereIn($column, $values, $boolean, $not);
         return $this->baseRepository;
     }
 
     /**
-     * @param string $column
-     * @param array $values
+     * @param Expression|string $column
+     * @param mixed $values
      * @param string $boolean
      * @return BaseRepository
      */
-    public function whereNotIn(string $column, array $values, string $boolean = 'and'): BaseRepository
+    public function whereNotIn(Expression|string $column, mixed $values, string $boolean = 'and'): BaseRepository
     {
         $this->builder->whereNotIn($column, $values, $boolean);
         return $this->baseRepository;
     }
 
     /**
-     * @param array|string $columns
+     * @param array|Expression|string $columns
      * @param string $boolean
      * @param bool $not
      * @return BaseRepository
      */
-    public function whereNull(array|string $columns, string $boolean = 'and', bool $not = false): BaseRepository
+    public function whereNull(array|Expression|string $columns, string $boolean = 'and', bool $not = false): BaseRepository
     {
         $this->builder->whereNull($columns, $boolean, $not);
         return $this->baseRepository;
@@ -348,11 +348,11 @@ class BaseRepositoryExtend
 
 
     /**
-     * @param string|array $columns
+     * @param string|Expression|array $columns
      * @param string $boolean
      * @return BaseRepository
      */
-    public function whereNotNull(string|array $columns, string $boolean = 'and'): BaseRepository
+    public function whereNotNull(string|Expression|array $columns, string $boolean = 'and'): BaseRepository
     {
         $this->builder->whereNotNull($columns, $boolean);
         return $this->baseRepository;
@@ -360,13 +360,13 @@ class BaseRepositoryExtend
 
 
     /**
-     * @param string $column
+     * @param Expression|string $column
      * @param string $operator
      * @param DateTimeInterface|string|null $value
      * @param string $boolean
      * @return BaseRepository
      */
-    public function whereDate(string $column, string $operator, DateTimeInterface|string|null $value = null, string $boolean = 'and'): BaseRepository
+    public function whereDate(Expression|string $column, string $operator, DateTimeInterface|string|null $value = null, string $boolean = 'and'): BaseRepository
     {
         $this->builder->whereDate($column, $operator, $value, $boolean);
         return $this->baseRepository;
@@ -374,26 +374,26 @@ class BaseRepositoryExtend
 
 
     /**
-     * @param string $column
+     * @param Expression|string $column
      * @param string $operator
-     * @param DateTimeInterface|string|null $value
+     * @param DateTimeInterface|int|string|null $value
      * @param string $boolean
      * @return BaseRepository
      */
-    public function whereMonth(string $column, string $operator, DateTimeInterface|string|null $value = null, string $boolean = 'and'): BaseRepository
+    public function whereMonth(Expression|string $column, string $operator, DateTimeInterface|int|string|null $value = null, string $boolean = 'and'): BaseRepository
     {
         $this->builder->whereMonth($column, $operator, $value, $boolean);
         return $this->baseRepository;
     }
 
     /**
-     * @param string $column
+     * @param Expression|string $column
      * @param string $operator
-     * @param DateTimeInterface|string|null $value
+     * @param DateTimeInterface|string|int|null $value
      * @param string $boolean
      * @return BaseRepository
      */
-    public function whereDay(string $column, string $operator, DateTimeInterface|string|null $value = null, string $boolean = 'and'): BaseRepository
+    public function whereDay(Expression|string $column, string $operator, DateTimeInterface|int|string|null $value = null, string $boolean = 'and'): BaseRepository
     {
         $this->builder->whereDay($column, $operator, $value, $boolean);
         return $this->baseRepository;
@@ -401,13 +401,13 @@ class BaseRepositoryExtend
 
 
     /**
-     * @param string $column
+     * @param Expression|string $column
      * @param string $operator
-     * @param DateTimeInterface|string|null $value
+     * @param DateTimeInterface|int|string|null $value
      * @param string $boolean
      * @return BaseRepository
      */
-    public function whereYear(string $column, string $operator, DateTimeInterface|string|null $value = null, string $boolean = 'and'): BaseRepository
+    public function whereYear(Expression|string $column, string $operator, DateTimeInterface|int|string|null $value = null, string $boolean = 'and'): BaseRepository
     {
         $this->builder->whereYear($column, $operator, $value, $boolean);
         return $this->baseRepository;
