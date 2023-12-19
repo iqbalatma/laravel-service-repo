@@ -71,11 +71,12 @@ class BaseRepositoryExtend
 
 
     /**
+     * @param array|string $columns
      * @return Collection|null
      */
-    public function get(): Collection|null
+    public function get(array|string $columns = ['*']): Collection|null
     {
-        return $this->builder->get();
+        return $this->builder->get($columns);
     }
 
     /**
@@ -97,20 +98,21 @@ class BaseRepositoryExtend
 
     /**
      * @param array|string $relations
+     * @param Closure|string|null $callback
      * @return BaseRepository
      */
-    public function with(array|string $relations): BaseRepository
+    public function with(array|string $relations, Closure|null|string $callback = null): BaseRepository
     {
-        $this->builder->with($relations);
+        $this->builder->with($relations, $callback);
         return $this->baseRepository;
     }
 
 
     /**
-     * @param array|string $relations
+     * @param mixed $relations
      * @return BaseRepository
      */
-    public function without(array|string $relations): BaseRepository
+    public function without(mixed $relations): BaseRepository
     {
         $this->builder->without($relations);
         return $this->baseRepository;
@@ -218,13 +220,13 @@ class BaseRepositoryExtend
 
 
     /**
-     * @param array|string $column
-     * @param string|null $operator
+     * @param array|Closure|Expression|string $column
+     * @param mixed $operator
      * @param mixed $value
-     * @param string|null $boolean
+     * @param string $boolean
      * @return BaseRepository
      */
-    public function where(array|string $column, ?string $operator = null, mixed $value = null, ?string $boolean = 'and'): BaseRepository
+    public function where(array|Closure|Expression|string $column, mixed $operator = null, mixed $value = null, string $boolean = 'and'): BaseRepository
     {
         $this->builder->where($column, $operator, $value, $boolean);
         return $this->baseRepository;
@@ -232,12 +234,12 @@ class BaseRepositoryExtend
 
 
     /**
-     * @param array|string $column
-     * @param string|null $operator
+     * @param array|Closure|Expression|string $column
+     * @param mixed $operator
      * @param mixed $value
      * @return BaseRepository
      */
-    public function orWhere(array|string $column, ?string $operator = null, mixed $value = null): BaseRepository
+    public function orWhere(array|Closure|Expression|string $column, mixed $operator = null, mixed $value = null): BaseRepository
     {
         $this->builder->orWhere($column, $operator, $value);
         return $this->baseRepository;
@@ -245,13 +247,13 @@ class BaseRepositoryExtend
 
 
     /**
-     * @param $column
+     * @param array|Closure|Expression|string $column
      * @param string|null $operator
      * @param mixed $value
-     * @param string|null $boolean
+     * @param string $boolean
      * @return BaseRepository
      */
-    public function whereNot($column, ?string $operator = null, mixed $value = null, ?string $boolean = 'and'): BaseRepository
+    public function whereNot(array|Closure|Expression|string $column, mixed $operator = null, mixed $value = null, string $boolean = 'and'): BaseRepository
     {
         $this->builder->whereNot($column, $operator, $value, $boolean);
         return $this->baseRepository;
@@ -259,13 +261,13 @@ class BaseRepositoryExtend
 
 
     /**
-     * @param string $column
+     * @param Expression|string $column
      * @param iterable $values
      * @param string $boolean
      * @param bool $not
      * @return BaseRepository
      */
-    public function whereBetween(string $column, iterable $values, string $boolean = 'and', bool $not = false): BaseRepository
+    public function whereBetween(Expression|string $column, iterable $values, string $boolean = 'and', bool $not = false): BaseRepository
     {
         $this->builder->whereBetween($column, $values, $boolean, $not);
         return $this->baseRepository;
@@ -273,12 +275,12 @@ class BaseRepositoryExtend
 
 
     /**
-     * @param string $column
+     * @param Expression|string $column
      * @param iterable $values
      * @param string $boolean
      * @return BaseRepository
      */
-    public function whereNotBetween(string $column, iterable $values, string $boolean = 'and'): BaseRepository
+    public function whereNotBetween(Expression|string $column, iterable $values, string $boolean = 'and'): BaseRepository
     {
         $this->builder->whereNotBetween($column, $values, $boolean);
         return $this->baseRepository;
@@ -467,7 +469,7 @@ class BaseRepositoryExtend
             $perPage = request()->query(config("servicerepo.perpage.key"), config('servicerepo.perpage.value'));
         }
 
-        if ($columns){
+        if ($columns) {
             $this->builder->addSelect($columns);
         }
 
@@ -481,7 +483,7 @@ class BaseRepositoryExtend
      */
     public function getAllData(array $whereClause = [], array|null $columns = null): Collection
     {
-        if ($columns){
+        if ($columns) {
             $this->builder->addSelect($columns);
         }
         return $this->builder
@@ -497,7 +499,7 @@ class BaseRepositoryExtend
      */
     public function getDataById(string|int|array $id, array|null $columns = null): Model|null
     {
-        if ($columns){
+        if ($columns) {
             $this->builder->addSelect($columns);
         }
         return $this->builder->find($id);
@@ -511,7 +513,7 @@ class BaseRepositoryExtend
      */
     public function getSingleData(array $whereClause = [], array|null $columns = null): Model|null
     {
-        if ($columns){
+        if ($columns) {
             $this->builder->addSelect($columns);
         }
         return $this->builder
