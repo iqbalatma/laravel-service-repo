@@ -103,7 +103,11 @@ class BaseRepositoryExtend
      */
     public function with(array|string $relations, Closure|null|string $callback = null): BaseRepository
     {
-        $this->builder->with($relations, $callback);
+        if (is_null($callback)) {
+            $this->builder->with($relations);
+        } else {
+            $this->builder->with($relations, $callback);
+        }
         return $this->baseRepository;
     }
 
