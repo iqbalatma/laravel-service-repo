@@ -12,6 +12,7 @@ use Iqbalatma\LaravelServiceRepo\Exceptions\EmptyDataException;
 abstract class BaseService implements ServiceInterface
 {
     protected array $relationshipCheckBeforeDelete = [];
+
     /**
      * @var BaseRepository $repository
      */
@@ -151,6 +152,7 @@ abstract class BaseService implements ServiceInterface
         $this->checkData($id);
 
         $entity = $this->getServiceEntity();
+        $entity->
         $entity->fill($requestedData)->save();
 
         return $entity;
@@ -166,13 +168,13 @@ abstract class BaseService implements ServiceInterface
     public function deleteDataById(string|int $id): int
     {
         $this->checkData($id);
-        $data = $this->getServiceEntity();
+        $entity = $this->getServiceEntity();
         foreach ($this->relationshipCheckBeforeDelete as $relation) {
-            if ($data->{$relation}()->exists()) {
+            if ($entity->{$relation}()->exists()) {
                 throw new DeleteDataThatStillUsedException();
             }
         }
 
-        return $data->delete();
+        return $entity->delete();
     }
 }
