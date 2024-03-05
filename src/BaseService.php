@@ -2,15 +2,16 @@
 
 namespace Iqbalatma\LaravelServiceRepo;
 
+use App\Exceptions\DeleteDataThatStillUsedException;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Iqbalatma\LaravelServiceRepo\Contracts\Interfaces\ServiceInterface;
 use Iqbalatma\LaravelServiceRepo\Exceptions\EmptyDataException;
 
-/**
- * @template T
- */
 abstract class BaseService implements ServiceInterface
 {
+    protected array $relationshipCheckBeforeDelete = [];
     /**
      * @var BaseRepository $repository
      */
@@ -36,7 +37,7 @@ abstract class BaseService implements ServiceInterface
      * @return bool
      * @throws EmptyDataException
      */
-    public function checkData(string|int $id, array $columns = ["*"]): bool
+    protected function checkData(string|int $id, array $columns = ["*"]): bool
     {
         $entity = $this->repository->getDataById($id);
         if (!$entity) {
@@ -54,7 +55,7 @@ abstract class BaseService implements ServiceInterface
      * @return void
      * @throws EmptyDataException
      */
-    public function isExists(mixed $data): void
+    protected function isExists(mixed $data): void
     {
         if (!$data || $data?->count() === 0) {
             throw new EmptyDataException("Data doesn't exists !");
@@ -66,7 +67,7 @@ abstract class BaseService implements ServiceInterface
      * @param Model $serviceEntity
      * @return $this
      */
-    public function setServiceEntity(Model $serviceEntity): self
+    protected function setServiceEntity(Model $serviceEntity): self
     {
         $this->serviceEntity = $serviceEntity;
         return $this;
@@ -74,9 +75,9 @@ abstract class BaseService implements ServiceInterface
 
 
     /**
-     * @return T
+     * @return Model
      */
-    public function getServiceEntity(): Model
+    protected function getServiceEntity(): Model
     {
         return $this->serviceEntity;
     }
@@ -86,7 +87,7 @@ abstract class BaseService implements ServiceInterface
      * @param array $requestedData
      * @return $this
      */
-    public function setRequestedData(array $requestedData): self
+    protected function setRequestedData(array $requestedData): self
     {
         $this->requestedData = $requestedData;
         return $this;
@@ -97,12 +98,81 @@ abstract class BaseService implements ServiceInterface
      * @param string|null $key
      * @return array|string|null
      */
-    public function getRequestedData(string $key = null): array|string|null
+    protected function getRequestedData(string $key = null): array|string|null
     {
-        if (isset($key)){
-            return $this->requestedData[$key] ?? null;
-        }else{
-            return $this->requestedData;
+        return isset($key) ? ($this->requestedData[$key] ?? null) : $this->requestedData;
+    }
+
+    /**
+     * @return LengthAwarePaginator
+     */
+    public function getAllDataPaginated(): LengthAwarePaginator
+    {
+        return $this->repository->getAllDataPaginated();
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getAllData(): Collection
+    {
+        return $this->repository->getAllData();
+    }
+
+    /**
+     * @param string|int $id
+     * @return Model
+     * @throws EmptyDataException
+     */
+    public function getDataById(string|int $id): Model
+    {
+        $this->checkData($id);
+
+        return $this->getServiceEntity();
+    }
+
+    /**
+     * @param array $requestedData
+     * @return Model
+     */
+    public function addNewData(array $requestedData): Model
+    {
+        return $this->repository->addNewData($requestedData);
+    }
+
+    /**
+     * @param string|int $id
+     * @param array $requestedData
+     * @return Model
+     * @throws EmptyDataException
+     */
+    public function updateDataById(string|int $id, array $requestedData): Model
+    {
+        $this->checkData($id);
+
+        $entity = $this->getServiceEntity();
+        $entity->fill($requestedData)->save();
+
+        return $entity;
+    }
+
+
+    /**
+     * @param string|int $id
+     * @return int
+     * @throws DeleteDataThatStillUsedException
+     * @throws EmptyDataException
+     */
+    public function deleteDataById(string|int $id): int
+    {
+        $this->checkData($id);
+        $data = $this->getServiceEntity();
+        foreach ($this->relationshipCheckBeforeDelete as $relation) {
+            if ($data->{$relation}()->exists()) {
+                throw new DeleteDataThatStillUsedException();
+            }
         }
+
+        return $data->delete();
     }
 }
