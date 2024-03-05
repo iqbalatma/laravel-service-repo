@@ -2,11 +2,11 @@
 
 namespace Iqbalatma\LaravelServiceRepo;
 
-use App\Exceptions\DeleteDataThatStillUsedException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Iqbalatma\LaravelServiceRepo\Contracts\Interfaces\ServiceInterface;
+use Iqbalatma\LaravelServiceRepo\Exceptions\DeleteDataThatStillUsedException;
 use Iqbalatma\LaravelServiceRepo\Exceptions\EmptyDataException;
 
 abstract class BaseService implements ServiceInterface
