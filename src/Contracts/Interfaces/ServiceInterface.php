@@ -10,7 +10,7 @@ interface ServiceInterface
 {
     public function getAllDataPaginated(): LengthAwarePaginator;
 
-    public function getAllData(): Collection;
+    public function getAllData(): Collection|array;
 
     public function getDataById(string|int $id): Model;
 

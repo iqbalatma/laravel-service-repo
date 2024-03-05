@@ -113,9 +113,9 @@ abstract class BaseService implements ServiceInterface
     }
 
     /**
-     * @return Collection
+     * @return Collection|array
      */
-    public function getAllData(): Collection
+    public function getAllData(): Collection|array
     {
         return $this->repository->getAllData();
     }
