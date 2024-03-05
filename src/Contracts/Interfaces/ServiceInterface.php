@@ -3,13 +3,20 @@
 namespace Iqbalatma\LaravelServiceRepo\Contracts\Interfaces;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 interface ServiceInterface
 {
-    public function checkData(string|int $id, array $columns = ["*"]): bool;
-    public function setRequestedData(array $requestedData): self;
-    public function getRequestedData(string $key = null): array|string|null;
-    public function getServiceEntity(): Model;
-    public function setServiceEntity(Model $serviceEntity): self;
-    public function isExists(mixed $data): void;
+    public function getAllDataPaginated(): LengthAwarePaginator;
+
+    public function getAllData(): Collection;
+
+    public function getDataById(string|int $id): Model;
+
+    public function addNewData(array $requestedData): Model;
+
+    public function updateDataById(string|int $id, array $requestedData): Model;
+
+    public function deleteDataById(string|int $id): int;
 }
