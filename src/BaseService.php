@@ -105,9 +105,9 @@ abstract class BaseService implements ServiceInterface
     }
 
     /**
-     * @return LengthAwarePaginator
+     * @return LengthAwarePaginator|array
      */
-    public function getAllDataPaginated(): LengthAwarePaginator
+    public function getAllDataPaginated(): LengthAwarePaginator|array
     {
         return $this->repository->getAllDataPaginated();
     }
@@ -122,10 +122,10 @@ abstract class BaseService implements ServiceInterface
 
     /**
      * @param string|int $id
-     * @return Model
+     * @return Model|array
      * @throws EmptyDataException
      */
-    public function getDataById(string|int $id): Model
+    public function getDataById(string|int $id): Model|array
     {
         $this->checkData($id);
 
@@ -134,9 +134,9 @@ abstract class BaseService implements ServiceInterface
 
     /**
      * @param array $requestedData
-     * @return Model
+     * @return Model|array
      */
-    public function addNewData(array $requestedData): Model
+    public function addNewData(array $requestedData): Model|array
     {
         return $this->repository->addNewData($requestedData);
     }
@@ -144,10 +144,10 @@ abstract class BaseService implements ServiceInterface
     /**
      * @param string|int $id
      * @param array $requestedData
-     * @return Model
+     * @return Model|array
      * @throws EmptyDataException
      */
-    public function updateDataById(string|int $id, array $requestedData): Model
+    public function updateDataById(string|int $id, array $requestedData): Model|array
     {
         $this->checkData($id);
 
@@ -161,11 +161,11 @@ abstract class BaseService implements ServiceInterface
 
     /**
      * @param string|int $id
-     * @return int
+     * @return int|array
      * @throws DeleteDataThatStillUsedException
      * @throws EmptyDataException
      */
-    public function deleteDataById(string|int $id): int
+    public function deleteDataById(string|int $id): int|array
     {
         $this->checkData($id);
         $entity = $this->getServiceEntity();

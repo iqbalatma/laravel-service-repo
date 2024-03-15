@@ -8,15 +8,15 @@ use Illuminate\Support\Collection;
 
 interface ServiceInterface
 {
-    public function getAllDataPaginated(): LengthAwarePaginator;
+    public function getAllDataPaginated(): LengthAwarePaginator|array;
 
     public function getAllData(): Collection|array;
 
-    public function getDataById(string|int $id): Model;
+    public function getDataById(string|int $id): Model|array;
 
-    public function addNewData(array $requestedData): Model;
+    public function addNewData(array $requestedData): Model|array;
 
-    public function updateDataById(string|int $id, array $requestedData): Model;
+    public function updateDataById(string|int $id, array $requestedData): Model|array;
 
-    public function deleteDataById(string|int $id): int;
+    public function deleteDataById(string|int $id): int|array;
 }
