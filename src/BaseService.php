@@ -96,13 +96,22 @@ abstract class BaseService implements ServiceInterface
 
 
     /**
-     * @param string|null $key
+     * @param string|null $keys
      * @return array|string|null
      */
-    protected function getRequestedData(string $key = null): array|string|null
+    protected function getRequestedData(string $keys = null): array|string|null
     {
-        return isset($key) ? ($this->requestedData[$key] ?? null) : $this->requestedData;
+        $requestedData = $this->requestedData;
+        if ($keys){
+            $explodedKeys = explode(".", $keys);
+            foreach ($explodedKeys as $explodedKey){
+                $requestedData = is_array($requestedData) ?
+                    ($requestedData[$explodedKey] ?? null) : null;
+            }
+        }
+        return $requestedData;
     }
+
 
     /**
      * @return LengthAwarePaginator|array
