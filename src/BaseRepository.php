@@ -100,7 +100,7 @@ use Iqbalatma\LaravelServiceRepo\Traits\RepositoryOverload;
  * @method BaseRepository whereColumn(array|string $first, ?string $operator = null, ?string $second = null, ?string $boolean = 'and')
  * @method static BaseRepository orWhereColumn(array|string $first, ?string $operator = null, ?string $second = null)
  * @method BaseRepository orWhereColumn(array|string $first, ?string $operator = null, ?string $second = null)
- *
+ * @method static int getPerPage()
  *
  */
 abstract class BaseRepository implements RepositoryInterface

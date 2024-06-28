@@ -32,6 +32,14 @@ class BaseRepositoryExtend
     }
 
     /**
+     * @return int
+     */
+    public static function getPerPage(): int
+    {
+        return request()->query(config("servicerepo.perpage.key"), config('servicerepo.perpage.value'));
+    }
+
+    /**
      * @param array|null $filterableColumns
      * @param array|null $relationFilterableColumns
      * @return BaseRepository
@@ -470,7 +478,7 @@ class BaseRepositoryExtend
     public function getAllDataPaginated(array $whereClause = [], array|null $columns = null, ?int $perPage = null): LengthAwarePaginator
     {
         if (!$perPage) {
-            $perPage = request()->query(config("servicerepo.perpage.key"), config('servicerepo.perpage.value'));
+            $perPage = self::getPerPage();
         }
 
         if ($columns) {
