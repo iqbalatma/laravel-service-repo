@@ -2,6 +2,7 @@
 
 namespace Iqbalatma\LaravelServiceRepo;
 
+use App\Contracts\Interfaces\DeletableRelationCheck;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -11,7 +12,6 @@ use Iqbalatma\LaravelServiceRepo\Exceptions\EmptyDataException;
 
 abstract class BaseService implements ServiceInterface
 {
-    protected array $relationshipCheckBeforeDelete = [];
 
     /**
      * @var BaseRepository $repository
@@ -178,12 +178,51 @@ abstract class BaseService implements ServiceInterface
     {
         $this->checkData($id);
         $entity = $this->getServiceEntity();
-        foreach ($this->relationshipCheckBeforeDelete as $relation) {
-            if ($entity->{$relation}()->exists()) {
-                throw new DeleteDataThatStillUsedException();
-            }
+        if ($entity instanceof DeletableRelationCheck) {
+            $this->checkIsEligibleToDelete($entity);
         }
 
         return $entity->delete();
+    }
+
+    protected array $breadcrumbs;
+
+    /**
+     * Use to get all data breadcrumbs
+     *
+     * @return array
+     */
+    protected function getBreadcrumbs(): array
+    {
+        return $this->breadcrumbs;
+    }
+
+    /**
+     * Use to add new breadcrumb
+     *
+     * @param array $newBreadcrumbs
+     * @return \App\Contracts\Abstracts\BaseService
+     */
+    protected function addBreadCrumbs(array $newBreadcrumbs): self
+    {
+        foreach ($newBreadcrumbs as $key => $breadcrumb) {
+            $this->breadcrumbs[$key] = $breadcrumb;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param DeletableRelationCheck $entity
+     * @return void
+     * @throws DeleteDataThatStillUsedException
+     */
+    protected function checkIsEligibleToDelete(DeletableRelationCheck $entity): void
+    {
+        foreach ($entity->getRelationCheckBeforeDelete() as $relation) {
+            if ($entity->{$relation}()->exists()) {
+                throw new DeleteDataThatStillUsedException("Cannot delete this entity because still in use");
+            }
+        }
     }
 }
