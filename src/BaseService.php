@@ -2,7 +2,7 @@
 
 namespace Iqbalatma\LaravelServiceRepo;
 
-use App\Contracts\Interfaces\DeletableRelationCheck;
+use Iqbalatma\LaravelServiceRepo\Contracts\Interfaces\DeletableRelationCheck;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
