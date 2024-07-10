@@ -30,6 +30,7 @@ abstract class BaseService implements ServiceInterface
      */
     protected array $requestedData;
 
+    protected array $breadcrumbs;
 
     /**
      * Use to check is data exists
@@ -185,7 +186,6 @@ abstract class BaseService implements ServiceInterface
         return $entity->delete();
     }
 
-    protected array $breadcrumbs;
 
     /**
      * Use to get all data breadcrumbs

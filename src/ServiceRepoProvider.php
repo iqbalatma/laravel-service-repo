@@ -31,5 +31,9 @@ class ServiceRepoProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/Config/servicerepo.php' => config_path('servicerepo.php'),
         ]);
+
+        viewShare([
+            "breadcrumbs" => []
+        ]);
     }
 }

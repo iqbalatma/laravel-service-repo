@@ -5,7 +5,10 @@
 	"autoload": {
 		"psr-4": {
 			"Iqbalatma\\LaravelServiceRepo\\": "src/"
-		}
+		},
+        "files": [
+            "src/helper.php"
+        ]
 	},
 	"authors": [
 		{
