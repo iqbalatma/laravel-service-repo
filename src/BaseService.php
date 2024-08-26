@@ -162,7 +162,6 @@ abstract class BaseService implements ServiceInterface
         $this->checkData($id);
 
         $entity = $this->getServiceEntity();
-        $entity->
         $entity->fill($requestedData)->save();
 
         return $entity;
