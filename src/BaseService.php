@@ -2,6 +2,8 @@
 
 namespace Iqbalatma\LaravelServiceRepo;
 
+use App\Attributes\ServiceQuery;
+use App\Attributes\ServiceRepository;
 use Iqbalatma\LaravelServiceRepo\Contracts\Interfaces\DeletableRelationCheck;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -9,9 +11,15 @@ use Illuminate\Support\Collection;
 use Iqbalatma\LaravelServiceRepo\Contracts\Interfaces\ServiceInterface;
 use Iqbalatma\LaravelServiceRepo\Exceptions\DeleteDataThatStillUsedException;
 use Iqbalatma\LaravelServiceRepo\Exceptions\EmptyDataException;
+use ReflectionClass;
 
 abstract class BaseService implements ServiceInterface
 {
+    public function __construct()
+    {
+        $reflectionClass = new ReflectionClass($this);
+        $this->implementServiceQuery($reflectionClass);
+    }
 
     /**
      * @var BaseRepository $repository
@@ -222,6 +230,20 @@ abstract class BaseService implements ServiceInterface
             if ($entity->{$relation}()->exists()) {
                 throw new DeleteDataThatStillUsedException("Cannot delete this entity because still in use");
             }
+        }
+    }
+
+
+    /**
+     * @param ReflectionClass $reflectionClass
+     * @return void
+     */
+    private function implementServiceQuery(ReflectionClass $reflectionClass):void
+    {
+        $attributes = $reflectionClass->getAttributes(ServiceRepository::class);
+        foreach ($attributes as $attribute) {
+            $serviceQuery = $attribute->newInstance();
+            $this->repository = new $serviceQuery->repositoryClass();
         }
     }
 }
