@@ -1,6 +1,6 @@
 <?php
 
-
+namespace Iqbalatma\LaravelServiceRepo\Attributes;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_CLASS)]

@@ -2,8 +2,7 @@
 
 namespace Iqbalatma\LaravelServiceRepo;
 
-use App\Attributes\ServiceQuery;
-use App\Attributes\ServiceRepository;
+use Iqbalatma\LaravelServiceRepo\Attributes\ServiceRepository;
 use Iqbalatma\LaravelServiceRepo\Contracts\Interfaces\DeletableRelationCheck;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
