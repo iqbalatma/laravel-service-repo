@@ -17,7 +17,7 @@ abstract class BaseService implements ServiceInterface
     public function __construct()
     {
         $reflectionClass = new ReflectionClass($this);
-        $this->implementServiceQuery($reflectionClass);
+        $this->implementServiceRepository($reflectionClass);
     }
 
     /**
@@ -237,12 +237,12 @@ abstract class BaseService implements ServiceInterface
      * @param ReflectionClass $reflectionClass
      * @return void
      */
-    private function implementServiceQuery(ReflectionClass $reflectionClass):void
+    private function implementServiceRepository(ReflectionClass $reflectionClass):void
     {
         $attributes = $reflectionClass->getAttributes(ServiceRepository::class);
         foreach ($attributes as $attribute) {
-            $serviceQuery = $attribute->newInstance();
-            $this->repository = new $serviceQuery->repositoryClass();
+            $serviceRepository = $attribute->newInstance();
+            $this->repository = new $serviceRepository->repositoryClass();
         }
     }
 }
