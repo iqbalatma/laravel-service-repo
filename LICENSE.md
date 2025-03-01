@@ -1,4 +1,4 @@
-Copyright (c) 2011 Jordi Boggiano, Nils Adermann
+Copyright (c) 2024 Iqbal Atma Muliawan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
