@@ -3,8 +3,12 @@
 namespace *NAMESPACE*;
 use *BASE_REPOSITORY_PARENT_CLASS_NAMESPACE*;
 use Illuminate\Database\Eloquent\Builder;
+use Iqbalatma\LaravelServiceRepo\BaseRepositoryExtend;
 use App\Models\*MODEL_NAME*;
 
+/**
+ * @mixin BaseRepositoryExtend
+ */
 class *CLASS_NAME* extends *BASE_REPOSITORY_PARENT_CLASS*
 {
 
