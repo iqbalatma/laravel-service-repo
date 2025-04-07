@@ -13,10 +13,9 @@ class GenerateServiceCommand extends Command
     protected $description = "Generate new service";
 
     protected Filesystem $files;
-    protected const STUB_PATH = __DIR__ . '/../Stubs/Service.stub';
+    protected const STUB_PATH = __DIR__ . '/../Stubs/service.stub';
     protected string $targetPath;
     protected string $singularClassName;
-
 
 
     /**
@@ -30,7 +29,7 @@ class GenerateServiceCommand extends Command
     }
 
 
-    public function handle()
+    public function handle(): void
     {
         $this->setSingularClassName()
             ->setTargetFilePath()
@@ -44,7 +43,6 @@ class GenerateServiceCommand extends Command
             $this->info("File : {$this->targetPath} already exits");
         }
     }
-
 
 
     /**
@@ -78,11 +76,12 @@ class GenerateServiceCommand extends Command
 
 
     /**
-     * @return array|false|string|string[]
+     * @return string
      */
-    private function getTemplateFileContent()
+    private function getTemplateFileContent(): string
     {
-        $content = file_get_contents(self::STUB_PATH);
+        $overrideStubPath = base_path("/stubs/service.stub");
+        $content = file_exists($overrideStubPath) ? file_get_contents($overrideStubPath) : file_get_contents(self::STUB_PATH);
 
         foreach ($this->getStubVariables() as $search => $replace) {
             $content = str_replace("*$search*", $replace, $content);
@@ -101,14 +100,13 @@ class GenerateServiceCommand extends Command
     }
 
 
-
     /**
      * @return self
      */
     private function setTargetFilePath(): self
     {
         $className = $this->singularClassName;
-        $this->targetPath = base_path( config("servicerepo.target_service_dir","app/Services")) . "/$className.php";
+        $this->targetPath = base_path(config("servicerepo.target_service_dir", "app/Services")) . "/$className.php";
 
         return $this;
     }

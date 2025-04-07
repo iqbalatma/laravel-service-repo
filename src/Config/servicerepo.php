@@ -53,7 +53,7 @@ return [
     | also change console generated parent class of Service
     |
     */
-    "base_service_parent_class" => "Iqbalatma\LaravelServiceRepo\BaseService",
+    "base_service_parent_class" => \Iqbalatma\LaravelServiceRepo\BaseService::class,
 
     /*
     |--------------------------------------------------------------------------
@@ -64,7 +64,7 @@ return [
     | also change console generated parent class of Repository
     |
     */
-    "base_repository_parent_class" => "Iqbalatma\LaravelServiceRepo\BaseRepository",
+    "base_repository_parent_class" => \Iqbalatma\LaravelServiceRepo\BaseRepository::class,
 
 
     /*
