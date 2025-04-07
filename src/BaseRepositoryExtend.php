@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Iqbalatma\LaravelServiceRepo\Traits\RepositoryFilter;
-use Iqbalatma\LaravelServiceRepo\Traits\RepositoryOrder;
+use Iqbalatma\LaravelServiceRepo\Traits\Repositories\RepositoryFilter;
+use Iqbalatma\LaravelServiceRepo\Traits\Repositories\RepositoryOrder;
 
 class BaseRepositoryExtend
 {

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Iqbalatma\LaravelServiceRepo\Contracts\Interfaces\RepositoryInterface;
-use Iqbalatma\LaravelServiceRepo\Traits\RepositoryOverload;
+use Iqbalatma\LaravelServiceRepo\Traits\Repositories\RepositoryOverload;
 
 
 /**

@@ -2,13 +2,9 @@
 
 namespace *NAMESPACE*;
 use *BASE_SERVICE_PARENT_CLASS_NAMESPACE*;
+use Iqbalatma\LaravelServiceRepo\Attributes\ServiceRepository;
 
+//#[ServiceRepository()]
 class *CLASS_NAME* extends *BASE_SERVICE_PARENT_CLASS*
 {
-    protected $repository;
-
-    public function __construct()
-    {
-        // $this->repository
-    }
 }

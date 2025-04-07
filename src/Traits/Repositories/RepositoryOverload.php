@@ -1,6 +1,6 @@
 <?php
 
-namespace Iqbalatma\LaravelServiceRepo\Traits;
+namespace Iqbalatma\LaravelServiceRepo\Traits\Repositories;
 
 use Exception;
 use Iqbalatma\LaravelServiceRepo\BaseRepository;

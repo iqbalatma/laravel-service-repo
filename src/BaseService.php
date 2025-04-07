@@ -10,10 +10,12 @@ use Illuminate\Support\Collection;
 use Iqbalatma\LaravelServiceRepo\Contracts\Interfaces\ServiceInterface;
 use Iqbalatma\LaravelServiceRepo\Exceptions\DeleteDataThatStillUsedException;
 use Iqbalatma\LaravelServiceRepo\Exceptions\EmptyDataException;
+use Iqbalatma\LaravelServiceRepo\Traits\ValidationInput;
 use ReflectionClass;
 
 abstract class BaseService implements ServiceInterface
 {
+    use ValidationInput;
     public function __construct()
     {
         $reflectionClass = new ReflectionClass($this);
@@ -23,7 +25,7 @@ abstract class BaseService implements ServiceInterface
     /**
      * @var BaseRepository $repository
      */
-    protected $repository;
+    protected BaseRepository $repository;
 
 
     /**
@@ -31,11 +33,6 @@ abstract class BaseService implements ServiceInterface
      */
     protected Model $serviceEntity;
 
-
-    /**
-     * @var array $requestedData
-     */
-    protected array $requestedData;
 
     protected array $breadcrumbs;
 
@@ -48,7 +45,7 @@ abstract class BaseService implements ServiceInterface
      */
     protected function checkData(string|int $id, array $columns = ["*"]): bool
     {
-        $entity = $this->repository->getDataById($id);
+        $entity = $this->repository->getDataById($id, $columns);
         if (!$entity) {
             throw new EmptyDataException("Data doesn't exists !");
         }
@@ -91,34 +88,6 @@ abstract class BaseService implements ServiceInterface
         return $this->serviceEntity;
     }
 
-
-    /**
-     * @param array $requestedData
-     * @return $this
-     */
-    protected function setRequestedData(array $requestedData): self
-    {
-        $this->requestedData = $requestedData;
-        return $this;
-    }
-
-
-    /**
-     * @param string|null $keys
-     * @return array|string|null
-     */
-    protected function getRequestedData(string $keys = null): array|string|null
-    {
-        $requestedData = $this->requestedData;
-        if ($keys){
-            $explodedKeys = explode(".", $keys);
-            foreach ($explodedKeys as $explodedKey){
-                $requestedData = is_array($requestedData) ?
-                    ($requestedData[$explodedKey] ?? null) : null;
-            }
-        }
-        return $requestedData;
-    }
 
 
     /**
@@ -193,30 +162,6 @@ abstract class BaseService implements ServiceInterface
     }
 
 
-    /**
-     * Use to get all data breadcrumbs
-     *
-     * @return array
-     */
-    protected function getBreadcrumbs(): array
-    {
-        return $this->breadcrumbs;
-    }
-
-    /**
-     * Use to add new breadcrumb
-     *
-     * @param array $newBreadcrumbs
-     * @return \App\Contracts\Abstracts\BaseService
-     */
-    protected function addBreadCrumbs(array $newBreadcrumbs): self
-    {
-        foreach ($newBreadcrumbs as $key => $breadcrumb) {
-            $this->breadcrumbs[$key] = $breadcrumb;
-        }
-
-        return $this;
-    }
 
     /**
      * @param DeletableRelationCheck $entity
@@ -232,7 +177,6 @@ abstract class BaseService implements ServiceInterface
         }
     }
 
-
     /**
      * @param ReflectionClass $reflectionClass
      * @return void
@@ -244,5 +188,31 @@ abstract class BaseService implements ServiceInterface
             $serviceRepository = $attribute->newInstance();
             $this->repository = new $serviceRepository->repositoryClass();
         }
+    }
+
+    /**
+     * Use to get all data breadcrumbs
+     *
+     * @return array
+     */
+    protected function getBreadcrumbs(): array
+    {
+        return $this->breadcrumbs;
+    }
+
+
+    /**
+     * Use to add new breadcrumb
+     *
+     * @param array $newBreadcrumbs
+     * @return \App\Contracts\Abstracts\BaseService
+     */
+    protected function addBreadCrumbs(array $newBreadcrumbs): self
+    {
+        foreach ($newBreadcrumbs as $key => $breadcrumb) {
+            $this->breadcrumbs[$key] = $breadcrumb;
+        }
+
+        return $this;
     }
 }

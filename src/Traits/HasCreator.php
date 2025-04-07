@@ -2,12 +2,12 @@
 
 namespace Iqbalatma\LaravelServiceRepo\Traits;
 
-use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
+ * @mixin Model
  * @property string created_by_id
- * @property User created_by
  */
 trait HasCreator
 {
@@ -28,6 +28,6 @@ trait HasCreator
      */
     public function created_by(): BelongsTo
     {
-        return $this->belongsTo(User::class, $this->getCreatorColumnName(), "id");
+        return $this->belongsTo(config("servicerepo.traits.has_creator_user_model"), $this->getCreatorColumnName(), "id");
     }
 }

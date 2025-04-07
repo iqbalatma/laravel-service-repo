@@ -1,6 +1,6 @@
 <?php
 
-namespace Iqbalatma\LaravelServiceRepo\Traits;
+namespace Iqbalatma\LaravelServiceRepo\Traits\Repositories;
 
 use Iqbalatma\LaravelServiceRepo\BaseRepository;
 

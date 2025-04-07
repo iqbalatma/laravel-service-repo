@@ -89,4 +89,8 @@ return [
     |
     */
     "order_query_param_root" => "order",
+
+    "traits" => [
+        "has_creator_user_model" => \App\Models\User::class
+    ]
 ];
