@@ -3,8 +3,13 @@
 namespace Iqbalatma\LaravelServiceRepo;
 
 use Illuminate\Support\ServiceProvider;
+use Iqbalatma\LaravelServiceRepo\Commands\GenerateAbstractCommand;
+use Iqbalatma\LaravelServiceRepo\Commands\GenerateEnumCommand;
+use Iqbalatma\LaravelServiceRepo\Commands\GenerateInterfaceCommand;
 use Iqbalatma\LaravelServiceRepo\Commands\GenerateRepositoryCommand;
 use Iqbalatma\LaravelServiceRepo\Commands\GenerateServiceCommand;
+use Iqbalatma\LaravelServiceRepo\Commands\GenerateTraitCommand;
+use Iqbalatma\LaravelServiceRepo\Commands\PublishStubCommand;
 
 class ServiceRepoProvider extends ServiceProvider
 {
@@ -25,6 +30,12 @@ class ServiceRepoProvider extends ServiceProvider
             $this->commands([
                 GenerateServiceCommand::class,
                 GenerateRepositoryCommand::class,
+                GenerateAbstractCommand::class,
+
+                GenerateEnumCommand::class,
+                GenerateInterfaceCommand::class,
+                GenerateTraitCommand::class,
+                PublishStubCommand::class,
             ]);
         }
 

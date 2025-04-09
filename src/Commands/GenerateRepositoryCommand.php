@@ -11,7 +11,7 @@ class GenerateRepositoryCommand extends Command
     protected $signature = "make:repository {name : service filename} {--M|model=}";
 
     protected $description = "Generate new repository";
-    protected const STUB_PATH = __DIR__ . '/../Stubs/repository.stub';
+    protected const STUB_FILE_PATH = __DIR__ . '/../Stubs/repository.stub';
 
     protected Filesystem $files;
     protected string $targetPath;
@@ -98,7 +98,7 @@ class GenerateRepositoryCommand extends Command
     private function getTemplateFileContent():string
     {
         $overrideStubPath = base_path("/stubs/repository.stub");
-        $content = file_exists($overrideStubPath) ? file_get_contents($overrideStubPath) : file_get_contents(self::STUB_PATH);
+        $content = file_exists($overrideStubPath) ? file_get_contents($overrideStubPath) : file_get_contents(self::STUB_FILE_PATH);
 
         foreach ($this->getStubVariables() as $search => $replace) {
             $content = str_replace("*$search*", $replace, $content);

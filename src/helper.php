@@ -1,5 +1,7 @@
 <?php
 
+use Iqbalatma\LaravelServiceRepo\Exceptions\DumpAPIException;
+
 if (!function_exists("viewShare")) {
     /**
      * @param array $data
@@ -44,3 +46,21 @@ if (!function_exists("formatToRupiah")) {
         return "Rp " . number_format($number, 2, ",", ".");
     }
 }
+
+if (!function_exists('ddapi')) {
+
+    /**
+     * @param mixed ...$data
+     * @return mixed
+     * @throws DumpAPIException
+     */
+    function ddapi(mixed ...$data)
+    {
+        $exceptionData = [];
+        foreach ($data as $datum) {
+            $exceptionData[] = $datum;
+        }
+        throw new DumpAPIException($exceptionData);
+    }
+}
+
