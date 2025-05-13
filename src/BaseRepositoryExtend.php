@@ -485,7 +485,7 @@ class BaseRepositoryExtend
             $this->builder->addSelect($columns);
         }
 
-        return $this->builder->where($whereClause)->paginate($perPage);
+        return $this->builder->where($whereClause)->paginate($perPage)->withQueryString();
     }
 
     /**
